@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user")
     private ShoppingCart shoppingCart;
 
+    @OneToOne(mappedBy = "user")
+    private PersonalInfo personalInfo;
+
     public enum Role {
         ROLE_USER,
         ROLE_STAFF

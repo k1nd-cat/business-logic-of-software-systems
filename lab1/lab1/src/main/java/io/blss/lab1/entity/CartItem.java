@@ -1,6 +1,7 @@
 package io.blss.lab1.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class CartItem {
     @JoinColumn(name = "cart_id")
     private ShoppingCart cart;
 
+    @Min(1)
     @Column(nullable = false)
     private Integer quantity;
 }
