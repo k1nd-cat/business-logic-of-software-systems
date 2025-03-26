@@ -35,7 +35,7 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private ShoppingCart shoppingCart;
 
     @OneToOne(mappedBy = "user")
