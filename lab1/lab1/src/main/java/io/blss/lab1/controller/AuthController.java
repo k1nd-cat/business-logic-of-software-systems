@@ -17,7 +17,10 @@ public class AuthController {
         return authService.signUpUser(authRequest);
     }
 
-//    TODO: Регистрацию для сотрудника
+    @PostMapping("sign-up/staff")
+    public AuthResponse signUpStaff(@RequestBody AuthRequest authRequest) {
+        return authService.signUpStaff(authRequest);
+    }
 
     @PostMapping("sign-in")
     public AuthResponse signIn(@RequestBody AuthRequest authRequest) {

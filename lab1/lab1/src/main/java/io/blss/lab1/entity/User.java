@@ -35,6 +35,9 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    @OneToOne(mappedBy = "user")
+    private ShoppingCart shoppingCart;
+
     public enum Role {
         ROLE_USER,
         ROLE_STAFF

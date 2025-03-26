@@ -2,8 +2,10 @@ package io.blss.lab1.service;
 
 import io.blss.lab1.dto.AuthRequest;
 import io.blss.lab1.dto.AuthResponse;
+import io.blss.lab1.entity.ShoppingCart;
 import io.blss.lab1.entity.User;
 import io.blss.lab1.exception.UsernameAlreadyExistsException;
+import io.blss.lab1.repository.ShoppingCartRepository;
 import io.blss.lab1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +22,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final ShoppingCartRepository shoppingCartRepository;
 
     public AuthResponse signUpUser(AuthRequest authRequest) {
         return signUp(authRequest, User.Role.ROLE_USER);
@@ -53,6 +56,12 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user = userService.save(user);
         final var token = jwtService.generateToken(user);
+
+        if (role == User.Role.ROLE_USER) {
+            var shoppingCart = new ShoppingCart();
+            shoppingCart.setUser(user);
+            shoppingCartRepository.save(shoppingCart);
+        }
 
         return AuthResponse.fromUser(user, token);
     }
