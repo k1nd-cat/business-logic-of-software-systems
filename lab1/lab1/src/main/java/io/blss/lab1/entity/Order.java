@@ -46,7 +46,7 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
 
-    enum DeliveryType {
+    public enum DeliveryType {
         COURIER,
         PICKUP
     }
