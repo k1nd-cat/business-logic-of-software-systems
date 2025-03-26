@@ -3,9 +3,7 @@ package io.blss.lab1.controller;
 import io.blss.lab1.dto.ProductInCartResponse;
 import io.blss.lab1.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,8 +13,13 @@ import java.util.List;
 public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
-    @GetMapping("/products/get-all")
+    @GetMapping("/product/get-all")
     public List<ProductInCartResponse> getProductsInCart() {
         return shoppingCartService.getProductsInCart();
+    }
+
+    @PostMapping("/product/{cartItemId}/remove")
+    public void removeProduct(@PathVariable Long cartItemId) {
+        shoppingCartService.removeProduct(cartItemId);
     }
 }
