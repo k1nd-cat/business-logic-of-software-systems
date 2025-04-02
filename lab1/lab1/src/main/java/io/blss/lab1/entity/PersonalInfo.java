@@ -26,5 +26,5 @@ public class PersonalInfo {
     private String number;
 
     @Column(name = "card_number")
-    private String card_number;
+    private String cardNumber;
 }
