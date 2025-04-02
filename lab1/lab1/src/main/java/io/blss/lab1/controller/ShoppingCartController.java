@@ -22,4 +22,8 @@ public class ShoppingCartController {
     public void removeProduct(@PathVariable Long cartItemId) {
         shoppingCartService.removeProduct(cartItemId);
     }
+
+//    TODO: увеличить количество товара
+//    TODO: уменьшить количество товара
+//    TODO: перейти к оплате (возможно, уже есть в сервисе корзины)
 }

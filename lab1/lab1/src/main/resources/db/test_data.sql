@@ -1,6 +1,9 @@
 INSERT INTO users (username, role, password) VALUES
 ('user1', 'ROLE_USER', '$2a$10$bF.JhIykRbsPg8gxKfWZZu3OMloVeGRmRdS8C8GV.lDnXJlyMoNOq');
 
+INSERT INTO shopping_cart (user_id) VALUES
+(1);
+
 insert into product_category(title, description) values
     ('смартфоны', 'Мобильные телефоны различных брендов');
 insert into product_category(title, description) values
