@@ -2,7 +2,6 @@ package io.blss.lab1.service;
 
 import io.blss.lab1.dto.ProductResponse;
 import io.blss.lab1.entity.CartItem;
-import io.blss.lab1.entity.ProductCategory;
 import io.blss.lab1.entity.User;
 import io.blss.lab1.exception.ProductCategoryNotFoundException;
 import io.blss.lab1.exception.ProductNotFoundException;
@@ -43,6 +42,8 @@ public class ProductService {
         final var products = productRepository.findAllByTitleStartingWith(prefix);
         return products.stream().map(ProductResponse::fromProduct).toList();
     }
+
+//    TODO: Получить продукты по фильтрам из конкретной категории
 
     @Transactional
     public void addProduct2Cart(Long productId, Integer quantity) {

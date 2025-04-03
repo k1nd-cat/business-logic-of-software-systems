@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/**", "/route/**", "/route/add/file", "/func/**", "/log/**").authenticated()
                         .requestMatchers("/cart/**").hasRole("USER")
                         .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/v3/api-docs", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

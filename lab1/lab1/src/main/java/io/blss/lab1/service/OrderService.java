@@ -19,6 +19,8 @@ public class OrderService {
     private final UserService userService;
     private final PersonalInfoRepository personalInfoRepository;
 
+//    TODO: Дописать метод: при оформлении заказа, удалять продукты из корзины
+//    TODO: Добавить в Order поля: createdAt, deliveredAt, canceledAt
     public void makeOrder(OrderResponse orderResponse) {
         User currentUser = userService.getCurrentUser();
         Order order = OrderResponse.fromOrderResponseToOrder(orderResponse, currentUser);
@@ -27,4 +29,9 @@ public class OrderService {
         orderRepository.save(order);
         personalInfoRepository.save(personalInfo);
     }
+
+//    TODO: Изменить SecurityConfig для Order, разбить по ролям
+//    TODO: Отменить заказ (только для покупателя)
+//    TODO: Получить список заказа (только для сотрудников)
+//    TODO: Изменить статус заказа (только для сотрудников)
 }
