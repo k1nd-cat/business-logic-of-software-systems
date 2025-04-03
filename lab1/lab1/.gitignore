@@ -6,6 +6,7 @@ target/
 .mvn
 mvnw
 mvnw.cmd
+amplicode.xml
 
 ### STS ###
 .apt_generated
