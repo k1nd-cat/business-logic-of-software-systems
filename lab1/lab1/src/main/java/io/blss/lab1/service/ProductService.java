@@ -2,6 +2,8 @@ package io.blss.lab1.service;
 
 import io.blss.lab1.dto.ProductResponse;
 import io.blss.lab1.entity.CartItem;
+import io.blss.lab1.entity.Characteristic;
+import io.blss.lab1.entity.Product;
 import io.blss.lab1.entity.User;
 import io.blss.lab1.exception.ProductCategoryNotFoundException;
 import io.blss.lab1.exception.ProductNotFoundException;
@@ -15,7 +17,10 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +44,7 @@ public class ProductService {
     }
 
     public List<ProductResponse> getProductsByPrefix(String prefix) {
-        final var products = productRepository.findAllByTitleStartingWith(prefix);
+        final var products = productRepository.findAllByTitleStartingWithIgnoreCase(prefix);
         return products.stream().map(ProductResponse::fromProduct).toList();
     }
 
@@ -71,5 +76,34 @@ public class ProductService {
                 .orElse(CartItem.builder().product(product).cart(user.getShoppingCart()).quantity(0).build());
         cartItem.setQuantity(cartItem.getQuantity() + quantity);
         cartItemRepository.save(cartItem);
+    }
+
+    public List<ProductResponse> getProductsWithFilters(Long categoryId, String prefix, Map<Long, Long> filtersMap) {
+        final var category = productCategoryRepository.findById(categoryId).orElseThrow(
+                () -> new ProductCategoryNotFoundException("Заданная категория не найдена")
+        );
+        final var products = productRepository.findAllByProductCategoryAndTitleStartsWithIgnoreCase(category, prefix);
+        final var filteredProducts = products.stream()
+                .filter(product -> {
+                    // Получаем все характеристики продукта
+                    Set<Characteristic> productCharacteristics = new HashSet<>(product.getCharacteristics());
+
+                    // Проверяем, что все фильтры удовлетворены
+                    return filtersMap.entrySet().stream()
+                            .allMatch(entry -> {
+                                Long requiredTypeId = entry.getKey();
+                                Long requiredCharacteristicId = entry.getValue();
+
+                                // Ищем характеристику с нужным type.id и characteristic.id
+                                return productCharacteristics.stream()
+                                        .anyMatch(ch ->
+                                                ch.getType().getId().equals(requiredTypeId) &&
+                                                        ch.getId().equals(requiredCharacteristicId)
+                                        );
+                            });
+                })
+                .toList();
+
+        return filteredProducts.stream().map(ProductResponse::fromProduct).toList();
     }
 }
