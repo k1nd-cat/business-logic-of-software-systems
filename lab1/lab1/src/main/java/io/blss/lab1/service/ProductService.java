@@ -3,7 +3,6 @@ package io.blss.lab1.service;
 import io.blss.lab1.dto.ProductResponse;
 import io.blss.lab1.entity.CartItem;
 import io.blss.lab1.entity.Characteristic;
-import io.blss.lab1.entity.Product;
 import io.blss.lab1.entity.User;
 import io.blss.lab1.exception.ProductCategoryNotFoundException;
 import io.blss.lab1.exception.ProductNotFoundException;
@@ -105,5 +104,12 @@ public class ProductService {
                 .toList();
 
         return filteredProducts.stream().map(ProductResponse::fromProduct).toList();
+    }
+
+    public ProductResponse getProductById(Long id) {
+        final var product = productRepository.findById(id).orElseThrow(
+                () -> new ProductNotFoundException("Заданного товара не существует")
+        );
+        return ProductResponse.fromProduct(product);
     }
 }

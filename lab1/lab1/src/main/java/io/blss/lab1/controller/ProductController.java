@@ -21,6 +21,11 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    @GetMapping("/get/id/{id}")
+    public ProductResponse getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
+    }
+
     @GetMapping("/get")
     public List<ProductResponse> getProductsByPrefix(@RequestParam(defaultValue = "") String prefix) {
         return productService.getProductsByPrefix(prefix);

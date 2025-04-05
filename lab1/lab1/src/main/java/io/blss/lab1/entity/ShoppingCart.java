@@ -26,4 +26,8 @@ public class ShoppingCart {
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items;
+
+    @ManyToOne
+    @JoinColumn(name = "promo_code_id")
+    private PromoCode promoCode;
 }

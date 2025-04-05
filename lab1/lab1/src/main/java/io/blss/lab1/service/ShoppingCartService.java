@@ -2,12 +2,11 @@ package io.blss.lab1.service;
 
 import io.blss.lab1.dto.ProductInCartResponse;
 import io.blss.lab1.entity.ShoppingCart;
-import io.blss.lab1.exception.CartItemNotFoundException;
-import io.blss.lab1.exception.CartItemQuantityException;
-import io.blss.lab1.exception.ProductNotFoundException;
-import io.blss.lab1.exception.ProductQuantityException;
+import io.blss.lab1.exception.*;
 import io.blss.lab1.repository.CartItemRepository;
 import io.blss.lab1.repository.ProductRepository;
+import io.blss.lab1.repository.PromoCodeRepository;
+import io.blss.lab1.repository.ShoppingCartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +17,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ShoppingCartService {
     private final UserService userService;
+    private final PromoCodeService promoCodeService;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
+
+    private final PromoCodeRepository promoCodeRepository;
+
+    private final ShoppingCartRepository shoppingCartRepository;
 
     public List<ProductInCartResponse> getProductsInCart() {
         return getUserShoppingCart().getItems().stream().map(ProductInCartResponse::fromCartItem).toList();
@@ -70,10 +74,48 @@ public class ShoppingCartService {
             throw new CartItemQuantityException("В корзине не лежит так много данного товара");
         }
 
+        if (quantity.equals(cartItem.getQuantity())) {
+            removeProduct(cartItemId);
+            return;
+        }
+
         product.setQuantity(product.getQuantity() + quantity);
         cartItem.setQuantity(cartItem.getQuantity() - quantity);
         productRepository.save(product);
         cartItemRepository.save(cartItem);
+    }
+
+    @Transactional
+    public void addPromoCode(String codeTitle) {
+        final var promoCode = promoCodeRepository.findPromoCodeByTitle(codeTitle).orElseThrow(
+                () -> new PromoCodeNotFoundException("Заданного промокода не существует")
+        );
+        final var shoppingCart = getUserShoppingCart();
+
+        if (!promoCodeService.checkForValidityCart(promoCode, shoppingCart)) {
+            throw new InvalidPromoCodeException("На данный заказ не может действовать промокод");
+        }
+
+        shoppingCart.setPromoCode(promoCode);
+        shoppingCartRepository.save(shoppingCart);
+    }
+
+    public void removePromoCode() {
+        final var shoppingCart = getUserShoppingCart();
+        shoppingCart.setPromoCode(null);
+    }
+
+    public Double getPrice() {
+        final var shoppingCart = getUserShoppingCart();
+        var price = shoppingCart.getItems().stream()
+                .mapToDouble(product -> product.getProduct().getPrice() * product.getQuantity())
+                .sum();
+
+        final var promoCode = shoppingCart.getPromoCode();
+        if (promoCode != null && promoCodeService.checkForValidityCart(promoCode, shoppingCart))
+            price = price / 100 * promoCode.getPercentage();
+
+        return price;
     }
 
     private ShoppingCart getUserShoppingCart() {

@@ -18,12 +18,34 @@ public class ShoppingCartController {
         return shoppingCartService.getProductsInCart();
     }
 
-    @PostMapping("/product/{cartItemId}/remove")
+    @DeleteMapping("/product/{cartItemId}")
     public void removeProduct(@PathVariable Long cartItemId) {
         shoppingCartService.removeProduct(cartItemId);
     }
 
-//    TODO: увеличить количество товара
-//    TODO: уменьшить количество товара
+    @PostMapping("/add/product/{cartItemId}/count/{quantity}")
+    public void addProductCount(@PathVariable Long cartItemId, @PathVariable Integer quantity) {
+        shoppingCartService.addProductCount(cartItemId, quantity);
+    }
+
+    @DeleteMapping("/product/{cartItemId}/count/{quantity}")
+    public void removeProductCount(@PathVariable Long cartItemId, @PathVariable Integer quantity) {
+        shoppingCartService.addProductCount(cartItemId, quantity);
+    }
+
+    @PostMapping("promo-code/{promoCode}/add")
+    public void addPromoCode(@PathVariable String promoCode) {
+        shoppingCartService.addPromoCode(promoCode);
+    }
+
+    @DeleteMapping("promo-code")
+    public void removePromoCode() {
+        shoppingCartService.removePromoCode();
+    }
+
+    @GetMapping("price")
+    public Double getPrice() {
+        return shoppingCartService.getPrice();
+    }
 //    TODO: перейти к оплате (возможно, уже есть в сервисе корзины)
 }
