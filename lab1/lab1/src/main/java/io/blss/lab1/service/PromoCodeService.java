@@ -23,6 +23,7 @@ public class PromoCodeService {
     }
 
     public Boolean checkForValidityCart(PromoCode promoCode, ShoppingCart cart) {
+        if (cart.getPromoCode() == null) return false;
         final var user = userService.getCurrentUser();
         final var promoCodeStartDate = promoCode.getStartDate();
         final var promoCodeEndDate = promoCode.getEndDate();

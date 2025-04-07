@@ -112,7 +112,7 @@ public class ShoppingCartService {
                 .sum();
 
         final var promoCode = shoppingCart.getPromoCode();
-        if (promoCode != null && promoCodeService.checkForValidityCart(promoCode, shoppingCart))
+        if (promoCodeService.checkForValidityCart(promoCode, shoppingCart))
             price = price / 100 * promoCode.getPercentage();
 
         return price;

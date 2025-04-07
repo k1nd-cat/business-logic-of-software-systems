@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "orders")
 public class Order {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,12 +47,16 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
 
+    @ManyToOne
+    @JoinColumn(name = "promo_code_id")
+    private PromoCode promoCode;
+
     public enum DeliveryType {
         COURIER,
         PICKUP
     }
 
-    enum OrderStatus {
+    public enum OrderStatus {
 //        обрабатывается
         PROCESSING,
 

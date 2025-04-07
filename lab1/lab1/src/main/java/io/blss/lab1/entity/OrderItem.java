@@ -28,7 +28,6 @@ public class OrderItem {
         @JoinColumn(name = "order_id")
         private Order order;
 
-
         @Min(1)
         @Column(nullable = false)
         private Integer quantity;

@@ -1,16 +1,12 @@
 package io.blss.lab1.service;
 
 import io.blss.lab1.dto.OrderResponse;
-import io.blss.lab1.entity.Order;
-import io.blss.lab1.entity.PersonalInfo;
-import io.blss.lab1.entity.User;
+import io.blss.lab1.entity.*;
+import io.blss.lab1.repository.OrderItemRepository;
 import io.blss.lab1.repository.OrderRepository;
 import io.blss.lab1.repository.PersonalInfoRepository;
-import io.blss.lab1.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import static io.blss.lab1.dto.OrderResponse.*;
 
 @Service
 @RequiredArgsConstructor
@@ -19,15 +15,46 @@ public class OrderService {
     private final UserService userService;
     private final PersonalInfoRepository personalInfoRepository;
 
-//    TODO: Дописать метод: при оформлении заказа, удалять продукты из корзины
+    private final OrderItemRepository orderItemRepository;
+
+    private final PromoCodeService promoCodeService;
+
+    private final ShoppingCartService shoppingCartService;
+
+    //    TODO: Дописать метод: при оформлении заказа, удалять продукты из корзины
 //    TODO: Добавить в Order поля: createdAt, deliveredAt, canceledAt
     public void makeOrder(OrderResponse orderResponse) {
         User currentUser = userService.getCurrentUser();
-        Order order = OrderResponse.fromOrderResponseToOrder(orderResponse, currentUser);
-        PersonalInfo personalInfo = fromOrderResponseToPersonalInfo(orderResponse, currentUser);
+        Order order = orderResponse.toOrder(currentUser);
+        PersonalInfo personalInfo = orderResponse.toPersonalInfo(currentUser);
 
         orderRepository.save(order);
         personalInfoRepository.save(personalInfo);
+    }
+
+    private Order generateOrderFromCurrentUserShoppingCart() {
+        final var user = userService.getCurrentUser();
+        final var shoppingCart = user.getShoppingCart();
+        final var orderBuilder = Order.builder()
+                .user(user)
+                .status(Order.OrderStatus.PROCESSING)
+                .build();
+
+        final var fullPrice = shoppingCartService.getPrice();
+        orderBuilder.setOrderAmount(fullPrice);
+        final var order = orderRepository.save(orderBuilder);
+        shoppingCart.getItems().forEach(
+                (item) -> {
+                    final var orderItemBuilder = OrderItem.builder()
+                            .order(order)
+                            .product(item.getProduct())
+                            .quantity(item.getQuantity())
+                            .build();
+                    orderItemRepository.save(orderItemBuilder);
+                }
+        );
+
+        return order;
     }
 
 //    TODO: Изменить SecurityConfig для Order, разбить по ролям
