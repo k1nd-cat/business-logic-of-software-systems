@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/courier")
+@RequestMapping("/courier")
 public class CourierController {
 
     private final CourierService courierService;
