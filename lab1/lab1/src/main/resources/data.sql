@@ -66,3 +66,8 @@ insert into product_characteristics(characteristic_id, product_id) values
     (6, 7),
     (7, 8),
     (5, 9);
+
+INSERT INTO promo_code (title, start_date, end_date, percentage, condition)
+VALUES
+    ('first', TO_TIMESTAMP('25.03.2024', 'DD.MM.YYYY'), TO_TIMESTAMP('15.08.2026', 'DD.MM.YYYY'), 15, 'FIRST_ORDER'),
+    ('always', TO_TIMESTAMP('25.03.2024', 'DD.MM.YYYY'), TO_TIMESTAMP('15.08.2026', 'DD.MM.YYYY'), 3, 'ALWAYS');

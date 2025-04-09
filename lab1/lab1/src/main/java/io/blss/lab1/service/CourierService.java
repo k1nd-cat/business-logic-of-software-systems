@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +57,7 @@ public class CourierService {
             throw new OrderNotAvailableException("Текущий курьер не может доставить заказ");
 
         order.setStatus(Order.OrderStatus.DELIVERED);
-        order.setDeliveredAt(LocalDateTime.now());
+        order.setDeliveredAt(new Date());
         orderRepository.save(order);
     }
 }

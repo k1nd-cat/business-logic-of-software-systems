@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -42,13 +42,13 @@ public class Order {
     private DeliveryType deliveryType;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @Column(name = "delivered_at", columnDefinition = "TIMESTAMP")
-    private LocalDateTime deliveredAt;
+    private Date deliveredAt;
 
     @Column(name = "delivery_time", columnDefinition = "TIMESTAMP")
-    private LocalDateTime deliveryTime;
+    private Date deliveryTime;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;

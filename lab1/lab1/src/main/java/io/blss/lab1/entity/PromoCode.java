@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Entity
@@ -24,10 +24,10 @@ public class PromoCode {
     private String title;
 
     @Column(name = "start_date", columnDefinition = "TIMESTAMP")
-    private LocalDateTime startDate;
+    private Date startDate;
 
     @Column(name = "end_date", columnDefinition = "TIMESTAMP")
-    private LocalDateTime endDate;
+    private Date endDate;
 
     private Double percentage;
 

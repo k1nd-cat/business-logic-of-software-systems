@@ -97,8 +97,8 @@ public class ShoppingCartService {
         );
         final var shoppingCart = getUserShoppingCart();
 
-        if (!promoCodeService.checkForValidityCart(promoCode, shoppingCart)) {
-            throw new InvalidPromoCodeException("На данный заказ не может действовать промокод");
+        if (!promoCodeService.checkForValidityCart(promoCode)) {
+            throw new InvalidPromoCodeException("На данный заказ не может действовать этот промокод");
         }
 
         shoppingCart.setPromoCode(promoCode);
@@ -117,8 +117,8 @@ public class ShoppingCartService {
                 .sum();
 
         final var promoCode = shoppingCart.getPromoCode();
-        if (promoCodeService.checkForValidityCart(promoCode, shoppingCart))
-            price = price / 100 * promoCode.getPercentage();
+        if (promoCode != null && promoCodeService.checkForValidityCart(promoCode))
+            price = price / 100 * (100 - promoCode.getPercentage());
 
         return price;
     }

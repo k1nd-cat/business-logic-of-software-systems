@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Schema(description = "Полная информация о заказе")
@@ -32,10 +32,10 @@ public class OrderResponse {
     private Order.OrderStatus status;
 
     @Schema(description = "Время доставки", example = "2023-05-16T14:00:00")
-    private LocalDateTime deliveryTime;
+    private Date deliveryTime;
 
     @Schema(description = "Дата создания заказа", example = "2023-05-15T14:30:00")
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @Schema(description = "Список товаров в заказе")
     private List<OrderItemResponse> orderItems;

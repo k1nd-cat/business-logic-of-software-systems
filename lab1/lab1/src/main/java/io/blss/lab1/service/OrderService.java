@@ -13,8 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -46,7 +46,7 @@ public class OrderService {
         orderBuilder.setUser(currentUser);
         orderBuilder.setStatus(Order.OrderStatus.PROCESSING);
         orderBuilder.setOrderAmount(fullPrice);
-        orderBuilder.setCreatedAt(LocalDateTime.now());
+        orderBuilder.setCreatedAt(new Date());
         final var order = orderRepository.save(orderBuilder);
 
 //        Переносим продукты из корзины в данные заказа и чистим данные корзины
