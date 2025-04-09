@@ -1,5 +1,9 @@
 INSERT INTO users (username, role, password) VALUES
-('user1', 'ROLE_USER', '$2a$10$bF.JhIykRbsPg8gxKfWZZu3OMloVeGRmRdS8C8GV.lDnXJlyMoNOq');
+('u', 'ROLE_USER', '$2a$10$//.3D7CjGJfsaJnUk0lcfuPnjJKM/dxwaqbI70M5sBxE7Id4.W5MK');
+
+INSERT INTO users (username, role, password) VALUES
+('c', 'ROLE_COURIER', '$2a$10$//.3D7CjGJfsaJnUk0lcfuPnjJKM/dxwaqbI70M5sBxE7Id4.W5MK');
+
 
 INSERT INTO shopping_cart (user_id) VALUES
 (1);
@@ -33,7 +37,7 @@ insert into characteristic (numeric_value, type_id, text_value) values
     (null, 1, 'красный'),
     (null, 1, 'зеленый'),
     (null, 1, 'серо-буро-малиновый'),
-    (null, 1, 'говносральный'),
+    (null, 1, 'оранжевый'),
     (256.0, 2, null),
     (64.0, 2, null),
     (512.0, 2, null);

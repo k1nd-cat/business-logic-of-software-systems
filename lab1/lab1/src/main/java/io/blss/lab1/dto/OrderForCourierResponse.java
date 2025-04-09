@@ -11,6 +11,10 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class OrderForCourierResponse {
+
+    @Schema(description = "ID заказа", example = "1")
+    private Long id;
+
     @Schema(description = "Адрес доставки", example = "ул. Ленина, д. 10, кв. 5")
     private String address;
 
@@ -29,6 +33,7 @@ public class OrderForCourierResponse {
                 .status(order.getStatus())
                 .type(order.getDeliveryType())
                 .createdAt(order.getCreatedAt())
+                .id(order.getId())
                 .build();
     }
 }

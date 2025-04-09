@@ -100,4 +100,13 @@ public class GlobalExceptionHandler {
                 e.getMessage()
         );
     }
+
+    @ExceptionHandler(InvalidOrderException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handlePromoCodeNotFoundException (InvalidOrderException e) {
+        return new ErrorResponse(
+                "Invalid order",
+                e.getMessage()
+        );
+    }
 }

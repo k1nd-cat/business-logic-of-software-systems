@@ -29,7 +29,7 @@ public class OrderRequest {
                 .build();
     }
 
-    public PersonalInfo tupdatePersonalInfo(PersonalInfo personalInfo) {
+    public PersonalInfo updatePersonalInfo(PersonalInfo personalInfo) {
         personalInfo.setNumber(number);
         personalInfo.setCardNumber(cardNumber);
         return personalInfo;
