@@ -1,7 +1,6 @@
 package io.blss.lab1.service;
 
 import io.blss.lab1.dto.OrderForCourierResponse;
-import io.blss.lab1.dto.PageResponse;
 import io.blss.lab1.entity.Order;
 import io.blss.lab1.exception.OrderNotAvailableException;
 import io.blss.lab1.exception.OrderNotFoundException;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

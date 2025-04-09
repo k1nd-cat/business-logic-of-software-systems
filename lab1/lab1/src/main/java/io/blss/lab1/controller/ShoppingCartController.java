@@ -35,7 +35,7 @@ public class ShoppingCartController {
 
     @DeleteMapping("/product/{cartItemId}/count/{quantity}")
     public void removeProductCount(@PathVariable Long cartItemId, @PathVariable Integer quantity) {
-        shoppingCartService.addProductCount(cartItemId, quantity);
+        shoppingCartService.removeProductQuantity(cartItemId, quantity);
     }
 
     @PostMapping("promo-code/{promoCode}/add")
