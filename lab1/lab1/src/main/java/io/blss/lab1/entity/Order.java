@@ -41,7 +41,10 @@ public class Order {
     @Column(nullable = false)
     private DeliveryType deliveryType;
 
-    @Column(name = "delivery_time")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdAt;
+
+    @Column(name = "delivery_time", columnDefinition = "TIMESTAMP")
     private LocalDateTime deliveryTime;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

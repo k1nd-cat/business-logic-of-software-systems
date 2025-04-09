@@ -1,7 +1,6 @@
 package io.blss.lab1.dto;
 
 import io.blss.lab1.entity.Order;
-import io.blss.lab1.entity.OrderItem;
 import io.blss.lab1.entity.PersonalInfo;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +16,9 @@ public class OrderResponse {
     private String address;
     private Double orderAmount;
     private Order.DeliveryType deliveryType;
+    private Order.OrderStatus status;
     private LocalDateTime deliveryTime;
+    private LocalDateTime createdAt;
     private List<OrderItemResponse> orderItems;
 
     public static OrderResponse fromOrderAndPersonalInfo(Order order, PersonalInfo personalInfo) {
@@ -28,7 +29,10 @@ public class OrderResponse {
                 .address(order.getAddress())
                 .orderAmount(order.getOrderAmount())
                 .deliveryTime(order.getDeliveryTime())
+                .createdAt(order.getCreatedAt())
                 .orderItems(orderItems)
+                .deliveryType(order.getDeliveryType())
+                .status(order.getStatus())
                 .build();
     }
 }

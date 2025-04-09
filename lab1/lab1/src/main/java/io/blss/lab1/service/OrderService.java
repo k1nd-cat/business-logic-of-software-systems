@@ -10,6 +10,9 @@ import io.blss.lab1.repository.PersonalInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -43,6 +46,7 @@ public class OrderService {
         orderBuilder.setUser(currentUser);
         orderBuilder.setStatus(Order.OrderStatus.PROCESSING);
         orderBuilder.setOrderAmount(fullPrice);
+        orderBuilder.setCreatedAt(LocalDateTime.now());
         final var order = orderRepository.save(orderBuilder);
 
 //        Переносим продукты из корзины в данные заказа и чистим данные корзины
@@ -64,8 +68,15 @@ public class OrderService {
         return OrderResponse.fromOrderAndPersonalInfo(order, personalInfo);
     }
 
+    public List<OrderResponse> getOrderHistory() {
+        final var user = userService.getCurrentUser();
+        final var orders = orderRepository.findAllByUserOrderByCreatedAtDesc(user);
+        return orders.stream()
+                .map((order) -> OrderResponse.fromOrderAndPersonalInfo(order, user.getPersonalInfo()))
+                .toList();
+    }
+
 //    TODO: Изменить SecurityConfig для Order, разбить по ролям
-//    TODO: Отменить заказ (только для покупателя)
 //    TODO: Получить список заказа (только для сотрудников)
 //    TODO: Изменить статус заказа (только для сотрудников)
 }

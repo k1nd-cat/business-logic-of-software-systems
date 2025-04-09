@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderRequest {
-    String number;
-    String cardNumber;
-    String address;
-    Order.DeliveryType deliveryType;
+    private String number;
+    private String cardNumber;
+    private String address;
+    private Order.DeliveryType deliveryType;
 
     public Order toOrder() {
         return Order.builder()

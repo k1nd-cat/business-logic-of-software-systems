@@ -47,5 +47,4 @@ public class ShoppingCartController {
     public Double getPrice() {
         return shoppingCartService.getPrice();
     }
-//    TODO: перейти к оплате (возможно, уже есть в сервисе корзины)
 }
