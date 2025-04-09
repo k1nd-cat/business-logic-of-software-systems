@@ -17,9 +17,9 @@ public class AuthController {
         return authService.signUpUser(authRequest);
     }
 
-    @PostMapping("sign-up/staff")
-    public AuthResponse signUpStaff(@RequestBody AuthRequest authRequest) {
-        return authService.signUpStaff(authRequest);
+    @PostMapping("sign-up/courier")
+    public AuthResponse signUpCourier(@RequestBody AuthRequest authRequest) {
+        return authService.signUpCourier(authRequest);
     }
 
     @PostMapping("sign-in")

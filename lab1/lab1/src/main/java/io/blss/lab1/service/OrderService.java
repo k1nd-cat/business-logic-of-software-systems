@@ -24,13 +24,10 @@ public class OrderService {
 
     private final OrderItemRepository orderItemRepository;
 
-    private final PromoCodeService promoCodeService;
-
     private final ShoppingCartService shoppingCartService;
 
     private final CartItemRepository cartItemRepository;
 
-    //    TODO: Добавить в Order поля: createdAt, deliveredAt, canceledAt
     public OrderResponse makeOrder(OrderRequest orderRequest) {
         final User currentUser = userService.getCurrentUser();
 
@@ -75,8 +72,4 @@ public class OrderService {
                 .map((order) -> OrderResponse.fromOrderAndPersonalInfo(order, user.getPersonalInfo()))
                 .toList();
     }
-
-//    TODO: Изменить SecurityConfig для Order, разбить по ролям
-//    TODO: Получить список заказа (только для сотрудников)
-//    TODO: Изменить статус заказа (только для сотрудников)
 }

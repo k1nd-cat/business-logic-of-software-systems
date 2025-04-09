@@ -28,8 +28,8 @@ public class AuthService {
         return signUp(authRequest, User.Role.ROLE_USER);
     }
 
-    public AuthResponse signUpStaff(AuthRequest authRequest) {
-        return signUp(authRequest, User.Role.ROLE_STAFF);
+    public AuthResponse signUpCourier(AuthRequest authRequest) {
+        return signUp(authRequest, User.Role.ROLE_COURIER);
     }
 
     public AuthResponse signIn(AuthRequest authRequest) {

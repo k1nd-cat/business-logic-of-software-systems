@@ -44,6 +44,9 @@ public class Order {
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
+    @Column(name = "delivered_at", columnDefinition = "TIMESTAMP")
+    private LocalDateTime deliveredAt;
+
     @Column(name = "delivery_time", columnDefinition = "TIMESTAMP")
     private LocalDateTime deliveryTime;
 
@@ -53,6 +56,10 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "promo_code_id")
     private PromoCode promoCode;
+
+    @ManyToOne
+    @JoinColumn(name = "courier_id")
+    private User courier;
 
     public enum DeliveryType {
         COURIER,
