@@ -3,31 +3,42 @@ package io.blss.lab1.dto;
 import io.blss.lab1.entity.Characteristic;
 import io.blss.lab1.entity.CharacteristicType;
 import io.blss.lab1.entity.ProductCategory;
-import lombok.AllArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Schema(description = "Характеристики категории товаров")
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class CategoryCharacteristicsResponse {
+    @Schema(description = "ID категории", example = "1")
     private Long id;
+
+    @Schema(description = "Название категории", example = "Электроника")
     private String title;
+
+    @Schema(description = "Описание категории", example = "Техника и электронные устройства")
     private String description;
+
+    @Schema(description = "Список типов характеристик")
     private List<CharacteristicTypeResponse> characteristicTypes;
 
+    @Schema(description = "Тип характеристики")
     @Data
     @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class CharacteristicTypeResponse {
+        @Schema(description = "ID типа характеристики", example = "1")
         private Long id;
+
+        @Schema(description = "Название типа", example = "Цвет")
         private String title;
+
+        @Schema(description = "Описание типа", example = "Основной цвет устройства")
         private String description;
+
+        @Schema(description = "Список характеристик")
         private List<CharacteristicResponse> characteristics;
 
         public static CharacteristicTypeResponse fromCharacteristicType(CharacteristicType type) {
@@ -42,13 +53,17 @@ public class CategoryCharacteristicsResponse {
         }
     }
 
+    @Schema(description = "Характеристика товара")
     @Data
     @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class CharacteristicResponse {
+        @Schema(description = "ID характеристики", example = "1")
         private Long id;
+
+        @Schema(description = "Текстовое значение", example = "Черный")
         private String textValue;
+
+        @Schema(description = "Числовое значение", example = "15.5")
         private Double numericValue;
 
         public static CharacteristicResponse fromCharacteristic(Characteristic characteristic) {

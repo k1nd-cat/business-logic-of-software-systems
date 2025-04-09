@@ -1,6 +1,5 @@
 package io.blss.lab1.service;
 
-import io.blss.lab1.entity.Order;
 import io.blss.lab1.entity.PromoCode;
 import io.blss.lab1.entity.ShoppingCart;
 import io.blss.lab1.repository.OrderRepository;
@@ -16,11 +15,6 @@ public class PromoCodeService {
     private final UserService userService;
 
     private final OrderRepository orderRepository;
-
-    public Boolean checkForValidityOrder(PromoCode promoCode, Order order) {
-//        TODO
-        return null;
-    }
 
     public Boolean checkForValidityCart(PromoCode promoCode, ShoppingCart cart) {
         if (cart.getPromoCode() == null) return false;

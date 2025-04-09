@@ -1,18 +1,21 @@
 package io.blss.lab1.dto;
 
 import io.blss.lab1.entity.User;
-import lombok.AllArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+@Schema(description = "Ответ с данными аутентификации")
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class AuthResponse {
+    @Schema(description = "Имя пользователя", example = "user123")
     private String username;
+
+    @Schema(description = "Роль пользователя", example = "USER")
     private User.Role role;
+
+    @Schema(description = "JWT токен", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
     private String token;
 
     public static AuthResponse fromUser(User user, String token) {
