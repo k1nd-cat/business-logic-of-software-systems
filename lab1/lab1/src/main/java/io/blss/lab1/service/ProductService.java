@@ -11,6 +11,8 @@ import io.blss.lab1.repository.CartItemRepository;
 import io.blss.lab1.repository.ProductCategoryRepository;
 import io.blss.lab1.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -29,25 +31,23 @@ public class ProductService {
     private final CartItemRepository cartItemRepository;
     private final ProductCategoryRepository productCategoryRepository;
 
-    public List<ProductResponse> getAllProducts() {
-        final var products = productRepository.findAll();
-        return products.stream().map(ProductResponse::fromProduct).toList();
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
+        final var products = productRepository.findAll(pageable);
+        return products.map(ProductResponse::fromProduct);
     }
 
-    public List<ProductResponse> getProductsByCategoryId(Long categoryId) {
+    public Page<ProductResponse> getProductsByCategoryId(Long categoryId, Pageable pageable) {
         final var category = productCategoryRepository.findById(categoryId).orElseThrow(
                 () -> new ProductCategoryNotFoundException("Заданной категории не существует")
         );
-        final var products = productRepository.findAllByProductCategory(category);
-        return products.stream().map(ProductResponse::fromProduct).toList();
+        final var products = productRepository.findAllByProductCategory(category, pageable);
+        return products.map(ProductResponse::fromProduct);
     }
 
-    public List<ProductResponse> getProductsByPrefix(String prefix) {
-        final var products = productRepository.findAllByTitleStartingWithIgnoreCase(prefix);
-        return products.stream().map(ProductResponse::fromProduct).toList();
+    public Page<ProductResponse> getProductsByPrefix(String prefix, Pageable pageable) {
+        final var products = productRepository.findAllByTitleStartingWithIgnoreCase(prefix, pageable);
+        return products.map(ProductResponse::fromProduct);
     }
-
-//    TODO: Получить продукты по фильтрам из конкретной категории
 
     @Transactional
     public void addProduct2Cart(Long productId, Integer quantity) {
@@ -84,16 +84,13 @@ public class ProductService {
         final var products = productRepository.findAllByProductCategoryAndTitleStartsWithIgnoreCase(category, prefix);
         final var filteredProducts = products.stream()
                 .filter(product -> {
-                    // Получаем все характеристики продукта
                     Set<Characteristic> productCharacteristics = new HashSet<>(product.getCharacteristics());
 
-                    // Проверяем, что все фильтры удовлетворены
                     return filtersMap.entrySet().stream()
                             .allMatch(entry -> {
                                 Long requiredTypeId = entry.getKey();
                                 Long requiredCharacteristicId = entry.getValue();
 
-                                // Ищем характеристику с нужным type.id и characteristic.id
                                 return productCharacteristics.stream()
                                         .anyMatch(ch ->
                                                 ch.getType().getId().equals(requiredTypeId) &&
@@ -104,6 +101,35 @@ public class ProductService {
                 .toList();
 
         return filteredProducts.stream().map(ProductResponse::fromProduct).toList();
+    }
+
+    public Page<ProductResponse> getProductsWithFilters(
+            Long categoryId,
+            String prefix,
+            Map<Long, Long> filtersMap,
+            Pageable pageable
+    ) {
+
+        if (!productCategoryRepository.existsById(categoryId)) {
+            throw new ProductCategoryNotFoundException("Заданная категория не найдена");
+        }
+
+        if (filtersMap == null || filtersMap.isEmpty()) {
+            return productRepository
+                    .findAllByProductCategoryIdAndTitleStartsWithIgnoreCase(
+                            categoryId,
+                            prefix,
+                            pageable)
+                    .map(ProductResponse::fromProduct);
+        }
+
+        return productRepository
+                .findAllByCategoryAndTitleAndCharacteristics(
+                        categoryId,
+                        prefix,
+                        filtersMap,
+                        pageable)
+                .map(ProductResponse::fromProduct);
     }
 
     public ProductResponse getProductById(Long id) {

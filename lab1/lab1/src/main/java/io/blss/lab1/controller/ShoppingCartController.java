@@ -3,9 +3,10 @@ package io.blss.lab1.controller;
 import io.blss.lab1.dto.CartItemResponse;
 import io.blss.lab1.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,8 +15,12 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @GetMapping("/product/get-all")
-    public List<CartItemResponse> getProductsInCart() {
-        return shoppingCartService.getProductsInCart();
+    public Page<CartItemResponse> getProductsInCart(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return shoppingCartService.getProductsInCart(pageable);
     }
 
     @DeleteMapping("/product/{cartItemId}")

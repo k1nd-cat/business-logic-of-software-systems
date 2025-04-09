@@ -27,7 +27,7 @@ INSERT INTO product (title, description, price, quantity, product_category_id) V
 
 insert into characteristic_type (description, title, type) values
     ('Цвета разных товаров', 'Цвет', 'TEXT'),
-    ('в гигабайтах', 'Память', 'NUMERIC')
+    ('в гигабайтах', 'Память', 'NUMERIC');
 
 insert into characteristic (numeric_value, type_id, text_value) values
     (null, 1, 'красный'),
@@ -42,7 +42,7 @@ insert into product_category_characteristic_type (characteristic_type_id, produc
     (1, 1),
     (1, 3),
     (2, 1),
-    (2, 2)
+    (2, 2);
 
 insert into product_characteristics(characteristic_id, product_id) values
     (1, 1),

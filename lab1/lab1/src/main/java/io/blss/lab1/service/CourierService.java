@@ -1,11 +1,14 @@
 package io.blss.lab1.service;
 
 import io.blss.lab1.dto.OrderForCourierResponse;
+import io.blss.lab1.dto.PageResponse;
 import io.blss.lab1.entity.Order;
 import io.blss.lab1.exception.OrderNotAvailableException;
 import io.blss.lab1.exception.OrderNotFoundException;
 import io.blss.lab1.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,9 +22,9 @@ public class CourierService {
 
     private final UserService userService;
 
-    public List<OrderForCourierResponse> getProcessingOrders() {
-        final var orders = orderRepository.findAllByStatusOrderByCreatedAtAsc(Order.OrderStatus.PROCESSING);
-        return orders.stream().map(OrderForCourierResponse::fromOrder).toList();
+    public Page<OrderForCourierResponse> getProcessingOrders(Pageable pageable) {
+        final var orders = orderRepository.findAllByStatusOrderByCreatedAtAsc(Order.OrderStatus.PROCESSING, pageable);
+        return orders.map(OrderForCourierResponse::fromOrder);
     }
 
     public OrderForCourierResponse selectOrderForDelivery(Long orderId) {
@@ -40,10 +43,10 @@ public class CourierService {
         return OrderForCourierResponse.fromOrder(order);
     }
 
-    public List<OrderForCourierResponse> getSelectedOrders() {
+    public Page<OrderForCourierResponse> getSelectedOrders(Pageable pageable) {
         final var user = userService.getCurrentUser();
-        final var orders = orderRepository.findAllByCourierAndStatus(user, Order.OrderStatus.SHIPPED);
-        return orders.stream().map(OrderForCourierResponse::fromOrder).toList();
+        final var orders = orderRepository.findAllByCourierAndStatus(user, Order.OrderStatus.SHIPPED, pageable);
+        return orders.map(OrderForCourierResponse::fromOrder);
     }
 
     public void deliverOrder(Long orderId) {

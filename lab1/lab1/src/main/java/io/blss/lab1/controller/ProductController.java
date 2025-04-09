@@ -3,6 +3,9 @@ package io.blss.lab1.controller;
 import io.blss.lab1.dto.ProductResponse;
 import io.blss.lab1.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +20,12 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/get-all")
-    public List<ProductResponse> getProducts() {
-        return productService.getAllProducts();
+    public Page<ProductResponse> getProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productService.getAllProducts(pageable);
     }
 
     @GetMapping("/get/id/{id}")
@@ -27,13 +34,22 @@ public class ProductController {
     }
 
     @GetMapping("/get")
-    public List<ProductResponse> getProductsByPrefix(@RequestParam(defaultValue = "") String prefix) {
-        return productService.getProductsByPrefix(prefix);
+    public Page<ProductResponse> getProductsByPrefix(
+            @RequestParam(defaultValue = "") String prefix,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productService.getProductsByPrefix(prefix, pageable);
     }
 
     @GetMapping("/get/{categoryId}")
-    public List<ProductResponse> getProductsByCategory(@PathVariable Long categoryId) {
-        return productService.getProductsByCategoryId(categoryId);
+    public Page<ProductResponse> getProductsByCategory(
+            @PathVariable Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productService.getProductsByCategoryId(categoryId, pageable);
     }
 
     @PostMapping("add-to-cart/{productId}")
@@ -49,10 +65,10 @@ public class ProductController {
     ) {
         Map<Long, Long> filtersMap = filters.stream()
                 .map(filter -> filter.split(":"))
-                .filter(parts -> parts.length == 2) // Защита от некорректных данных
+                .filter(parts -> parts.length == 2)
                 .collect(Collectors.toMap(
-                        parts -> Long.parseLong(parts[0]), // Ключ (ID фильтра)
-                        parts -> Long.parseLong(parts[1])  // Значение
+                        parts -> Long.parseLong(parts[0]),
+                        parts -> Long.parseLong(parts[1])
                 ));
         return productService.getProductsWithFilters(categoryId, prefix, filtersMap);
     }

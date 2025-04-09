@@ -8,25 +8,30 @@ import io.blss.lab1.repository.ProductRepository;
 import io.blss.lab1.repository.PromoCodeRepository;
 import io.blss.lab1.repository.ShoppingCartRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ShoppingCartService {
     private final UserService userService;
+
     private final PromoCodeService promoCodeService;
+
     private final CartItemRepository cartItemRepository;
+
     private final ProductRepository productRepository;
 
     private final PromoCodeRepository promoCodeRepository;
 
     private final ShoppingCartRepository shoppingCartRepository;
 
-    public List<CartItemResponse> getProductsInCart() {
-        return getUserShoppingCart().getItems().stream().map(CartItemResponse::fromCartItem).toList();
+    public Page<CartItemResponse> getProductsInCart(Pageable pageable) {
+        final var shoppingCart = getUserShoppingCart();
+        final var cartItems = cartItemRepository.findAllByCart(shoppingCart, pageable);
+        return cartItems.map(CartItemResponse::fromCartItem);
     }
 
     @Transactional

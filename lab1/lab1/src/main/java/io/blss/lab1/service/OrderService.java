@@ -8,6 +8,8 @@ import io.blss.lab1.repository.OrderItemRepository;
 import io.blss.lab1.repository.OrderRepository;
 import io.blss.lab1.repository.PersonalInfoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -65,11 +67,9 @@ public class OrderService {
         return OrderResponse.fromOrderAndPersonalInfo(order, personalInfo);
     }
 
-    public List<OrderResponse> getOrderHistory() {
+    public Page<OrderResponse> getOrderHistory(Pageable pageable) {
         final var user = userService.getCurrentUser();
-        final var orders = orderRepository.findAllByUserOrderByCreatedAtDesc(user);
-        return orders.stream()
-                .map((order) -> OrderResponse.fromOrderAndPersonalInfo(order, user.getPersonalInfo()))
-                .toList();
+        final var orders = orderRepository.findAllByUserOrderByCreatedAtDesc(user, pageable);
+        return orders.map((order) -> OrderResponse.fromOrderAndPersonalInfo(order, user.getPersonalInfo()));
     }
 }
