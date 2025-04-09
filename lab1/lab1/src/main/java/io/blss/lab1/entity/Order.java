@@ -42,7 +42,7 @@ public class Order {
     private DeliveryType deliveryType;
 
     @Column(name = "delivery_time")
-    private LocalDateTime delivery_time;
+    private LocalDateTime deliveryTime;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
@@ -69,5 +69,4 @@ public class Order {
 //        отменен
         CANCELLED,
     }
-
 }

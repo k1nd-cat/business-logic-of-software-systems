@@ -1,7 +1,9 @@
 package io.blss.lab1.service;
 
+import io.blss.lab1.dto.OrderRequest;
 import io.blss.lab1.dto.OrderResponse;
 import io.blss.lab1.entity.*;
+import io.blss.lab1.repository.CartItemRepository;
 import io.blss.lab1.repository.OrderItemRepository;
 import io.blss.lab1.repository.OrderRepository;
 import io.blss.lab1.repository.PersonalInfoRepository;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
+
     private final UserService userService;
+
     private final PersonalInfoRepository personalInfoRepository;
 
     private final OrderItemRepository orderItemRepository;
@@ -21,40 +25,43 @@ public class OrderService {
 
     private final ShoppingCartService shoppingCartService;
 
-    //    TODO: Дописать метод: при оформлении заказа, удалять продукты из корзины
-//    TODO: Добавить в Order поля: createdAt, deliveredAt, canceledAt
-    public void makeOrder(OrderResponse orderResponse) {
-        User currentUser = userService.getCurrentUser();
-        Order order = orderResponse.toOrder(currentUser);
-        PersonalInfo personalInfo = orderResponse.toPersonalInfo(currentUser);
+    private final CartItemRepository cartItemRepository;
 
-        orderRepository.save(order);
+    //    TODO: Добавить в Order поля: createdAt, deliveredAt, canceledAt
+    public OrderResponse makeOrder(OrderRequest orderRequest) {
+        final User currentUser = userService.getCurrentUser();
+
+//        Заполняем обновленные данные PersonalInfo
+        var personalInfo = personalInfoRepository.findByUser(currentUser)
+                .orElse(PersonalInfo.builder().user(currentUser).build());
+        personalInfo = orderRequest.tupdatePersonalInfo(personalInfo);
         personalInfoRepository.save(personalInfo);
-    }
 
-    private Order generateOrderFromCurrentUserShoppingCart() {
-        final var user = userService.getCurrentUser();
-        final var shoppingCart = user.getShoppingCart();
-        final var orderBuilder = Order.builder()
-                .user(user)
-                .status(Order.OrderStatus.PROCESSING)
-                .build();
-
+//        Заполняем данные заказа
+        final var orderBuilder = orderRequest.toOrder();
         final var fullPrice = shoppingCartService.getPrice();
+        orderBuilder.setUser(currentUser);
+        orderBuilder.setStatus(Order.OrderStatus.PROCESSING);
         orderBuilder.setOrderAmount(fullPrice);
         final var order = orderRepository.save(orderBuilder);
-        shoppingCart.getItems().forEach(
+
+//        Переносим продукты из корзины в данные заказа и чистим данные корзины
+        final var shoppingCart = currentUser.getShoppingCart();
+        final var orderItems = shoppingCart.getItems().stream().map(
                 (item) -> {
-                    final var orderItemBuilder = OrderItem.builder()
+                    var orderItem = OrderItem.builder()
                             .order(order)
                             .product(item.getProduct())
                             .quantity(item.getQuantity())
                             .build();
-                    orderItemRepository.save(orderItemBuilder);
+                    orderItem = orderItemRepository.save(orderItem);
+                    cartItemRepository.delete(item);
+                    return orderItem;
                 }
-        );
+        ).toList();
+        order.setOrderItems(orderItems);
 
-        return order;
+        return OrderResponse.fromOrderAndPersonalInfo(order, personalInfo);
     }
 
 //    TODO: Изменить SecurityConfig для Order, разбить по ролям

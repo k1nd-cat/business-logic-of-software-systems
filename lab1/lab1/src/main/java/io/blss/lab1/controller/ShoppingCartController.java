@@ -1,6 +1,6 @@
 package io.blss.lab1.controller;
 
-import io.blss.lab1.dto.ProductInCartResponse;
+import io.blss.lab1.dto.CartItemResponse;
 import io.blss.lab1.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @GetMapping("/product/get-all")
-    public List<ProductInCartResponse> getProductsInCart() {
+    public List<CartItemResponse> getProductsInCart() {
         return shoppingCartService.getProductsInCart();
     }
 

@@ -1,6 +1,6 @@
 package io.blss.lab1.service;
 
-import io.blss.lab1.dto.ProductInCartResponse;
+import io.blss.lab1.dto.CartItemResponse;
 import io.blss.lab1.entity.ShoppingCart;
 import io.blss.lab1.exception.*;
 import io.blss.lab1.repository.CartItemRepository;
@@ -25,8 +25,8 @@ public class ShoppingCartService {
 
     private final ShoppingCartRepository shoppingCartRepository;
 
-    public List<ProductInCartResponse> getProductsInCart() {
-        return getUserShoppingCart().getItems().stream().map(ProductInCartResponse::fromCartItem).toList();
+    public List<CartItemResponse> getProductsInCart() {
+        return getUserShoppingCart().getItems().stream().map(CartItemResponse::fromCartItem).toList();
     }
 
     @Transactional
