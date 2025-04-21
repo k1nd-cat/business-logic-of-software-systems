@@ -61,6 +61,10 @@ public class Order {
     @JoinColumn(name = "courier_id")
     private User courier;
 
+    @ManyToOne
+    @JoinColumn(name = "payment_info_id")
+    private PaymentInfo paymentInfo;
+
     public enum DeliveryType {
         COURIER,
         PICKUP

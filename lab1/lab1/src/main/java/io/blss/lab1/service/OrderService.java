@@ -6,6 +6,7 @@ import io.blss.lab1.entity.*;
 import io.blss.lab1.exception.InvalidOrderException;
 import io.blss.lab1.repository.OrderItemRepository;
 import io.blss.lab1.repository.OrderRepository;
+import io.blss.lab1.repository.PaymentInfoRepository;
 import io.blss.lab1.repository.PersonalInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -30,9 +32,25 @@ public class OrderService {
 
     private final ShoppingCartService shoppingCartService;
 
+    private final PaymentInfoRepository paymentInfoRepository;
+
     @Transactional
     public OrderResponse makeOrder(OrderRequest orderRequest) {
         final User currentUser = userService.getCurrentUser();
+        final var actualPaymentInfo = paymentInfoRepository.findByUserAndIsActual(currentUser, true).orElse(null);
+
+        if(actualPaymentInfo != null) {
+            actualPaymentInfo.setActual(false);
+            paymentInfoRepository.save(actualPaymentInfo);
+        }
+
+        var paymentInfo = paymentInfoRepository.findByUserAndCardNumber(currentUser, orderRequest.getCardNumber())
+                .orElse(PaymentInfo.builder()
+                        .cardNumber(orderRequest.getCardNumber())
+                        .user(currentUser)
+                        .build());
+        paymentInfo.setActual(true);
+        paymentInfo = paymentInfoRepository.save(paymentInfo);
 
 //        Заполняем обновленные данные PersonalInfo
         var personalInfo = personalInfoRepository.findByUser(currentUser)
@@ -44,6 +62,7 @@ public class OrderService {
         final var orderBuilder = orderRequest.toOrder();
         final var fullPrice = shoppingCartService.getPrice();
         orderBuilder.setUser(currentUser);
+        orderBuilder.setPaymentInfo(paymentInfo);
         orderBuilder.setStatus(Order.OrderStatus.PROCESSING);
         orderBuilder.setOrderAmount(fullPrice);
         orderBuilder.setCreatedAt(new Date());
@@ -69,12 +88,12 @@ public class OrderService {
 
         order.setOrderItems(orderItems);
 
-        return OrderResponse.fromOrderAndPersonalInfo(order, personalInfo);
+        return OrderResponse.fromOrderAndPersonalInfoAndPaymentInfo(order, personalInfo, paymentInfo);
     }
 
     public Page<OrderResponse> getOrderHistory(Pageable pageable) {
         final var user = userService.getCurrentUser();
         final var orders = orderRepository.findAllByUserOrderByCreatedAtDesc(user, pageable);
-        return orders.map((order) -> OrderResponse.fromOrderAndPersonalInfo(order, user.getPersonalInfo()));
+        return orders.map((order) -> OrderResponse.fromOrderAndPersonalInfoAndPaymentInfo(order, user.getPersonalInfo(), order.getPaymentInfo()));
     }
 }

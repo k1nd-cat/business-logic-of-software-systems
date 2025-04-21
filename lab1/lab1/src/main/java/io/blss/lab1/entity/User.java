@@ -41,6 +41,9 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private PersonalInfo personalInfo;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PaymentInfo> paymentInfos;
+
     public enum Role {
         ROLE_USER,
         ROLE_COURIER

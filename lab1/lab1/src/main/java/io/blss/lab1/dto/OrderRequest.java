@@ -22,6 +22,10 @@ public class OrderRequest {
     @Schema(description = "Тип доставки", example = "COURIER")
     private Order.DeliveryType deliveryType;
 
+    @Schema(description = "Id платежной информации", example = "238")
+    private Long paymentInfoId;
+
+
     public Order toOrder() {
         return Order.builder()
                 .address(address)
@@ -31,7 +35,7 @@ public class OrderRequest {
 
     public PersonalInfo updatePersonalInfo(PersonalInfo personalInfo) {
         personalInfo.setNumber(number);
-        personalInfo.setCardNumber(cardNumber);
+        personalInfo.setAddress(address);
         return personalInfo;
     }
 }

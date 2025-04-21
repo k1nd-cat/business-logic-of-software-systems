@@ -1,6 +1,7 @@
 package io.blss.lab1.dto;
 
 import io.blss.lab1.entity.Order;
+import io.blss.lab1.entity.PaymentInfo;
 import io.blss.lab1.entity.PersonalInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -40,11 +41,11 @@ public class OrderResponse {
     @Schema(description = "Список товаров в заказе")
     private List<OrderItemResponse> orderItems;
 
-    public static OrderResponse fromOrderAndPersonalInfo(Order order, PersonalInfo personalInfo) {
+    public static OrderResponse fromOrderAndPersonalInfoAndPaymentInfo(Order order, PersonalInfo personalInfo, PaymentInfo paymentInfo) {
         final var orderItems = order.getOrderItems().stream().map(OrderItemResponse::fromOrderItem).toList();
         return OrderResponse.builder()
                 .number(personalInfo.getNumber())
-                .cardNumber(personalInfo.getCardNumber())
+                .cardNumber(paymentInfo.getCardNumber())
                 .address(order.getAddress())
                 .orderAmount(order.getOrderAmount())
                 .deliveryTime(order.getDeliveryTime())

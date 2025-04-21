@@ -11,21 +11,23 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "personal_info")
-public class PersonalInfo {
+@Table(name = "payment_info")
+public class PaymentInfo {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @Column(name = "card_number", nullable = false)
+    private String cardNumber;
+
+
+    @Column(name = "is_actual", nullable = false)
+    private boolean isActual = true;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @Column(name = "phone_number")
-    private String number;
-
-    @Column(name = "address")
-    private String address;
 
 }
