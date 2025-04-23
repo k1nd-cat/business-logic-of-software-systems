@@ -1,0 +1,1815 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "Business logic of software systems",
+		"version": "v1"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:8080",
+			"description": "Generated server url"
+		}
+	],
+	"security": [
+		{
+			"bearerAuth": []
+		}
+	],
+	"tags": [
+		{
+			"name": "Фильтры",
+			"description": "Работа с характеристиками товаров"
+		},
+		{
+			"name": "Корзина",
+			"description": "Управление корзиной покупок"
+		},
+		{
+			"name": "Товары",
+			"description": "Управление товарами"
+		},
+		{
+			"name": "Аккаунт",
+			"description": "Управление аккаунтом"
+		},
+		{
+			"name": "Курьеры",
+			"description": "Управление заказами курьера"
+		},
+		{
+			"name": "Аутентификация",
+			"description": "Управление аутентификацией и регистрацией пользователей"
+		},
+		{
+			"name": "Заказы",
+			"description": "Управление заказами"
+		},
+		{
+			"name": "Категории",
+			"description": "Работа с категориями товаров"
+		}
+	],
+	"paths": {
+		"/api/products/{productId}/cart": {
+			"post": {
+				"tags": [
+					"Товары"
+				],
+				"summary": "Добавить в корзину",
+				"operationId": "addToCart",
+				"parameters": [
+					{
+						"name": "productId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "quantity",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/api/orders": {
+			"get": {
+				"tags": [
+					"Заказы"
+				],
+				"summary": "История заказов",
+				"operationId": "getOrderHistory",
+				"parameters": [
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 0
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageOrderResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Заказы"
+				],
+				"summary": "Создать заказ",
+				"operationId": "createOrder",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OrderRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/OrderResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/cart/promo-codes": {
+			"post": {
+				"tags": [
+					"Корзина"
+				],
+				"summary": "Применить промокод",
+				"operationId": "applyPromoCode",
+				"parameters": [
+					{
+						"name": "promoCode",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Корзина"
+				],
+				"summary": "Удалить промокод",
+				"operationId": "removePromoCode",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/api/auth/users": {
+			"post": {
+				"tags": [
+					"Аутентификация"
+				],
+				"summary": "Регистрация пользователя",
+				"operationId": "registerUser",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AuthRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/login": {
+			"post": {
+				"tags": [
+					"Аутентификация"
+				],
+				"summary": "Вход в систему",
+				"operationId": "login",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AuthRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/couriers": {
+			"post": {
+				"tags": [
+					"Аутентификация"
+				],
+				"summary": "Регистрация курьера",
+				"operationId": "registerCourier",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AuthRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/couriers/orders/{orderId}/complete": {
+			"patch": {
+				"tags": [
+					"Курьеры"
+				],
+				"summary": "Завершить заказ",
+				"operationId": "completeOrder",
+				"parameters": [
+					{
+						"name": "orderId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/api/couriers/orders/{orderId}/accept": {
+			"patch": {
+				"tags": [
+					"Курьеры"
+				],
+				"summary": "Принять заказ",
+				"operationId": "acceptOrder",
+				"parameters": [
+					{
+						"name": "orderId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/OrderForCourierResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/cart/items/{cartItemId}/increase": {
+			"patch": {
+				"tags": [
+					"Корзина"
+				],
+				"summary": "Увеличить количество",
+				"operationId": "increaseQuantity",
+				"parameters": [
+					{
+						"name": "cartItemId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "quantity",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/api/cart/items/{cartItemId}/decrease": {
+			"patch": {
+				"tags": [
+					"Корзина"
+				],
+				"summary": "Уменьшить количество",
+				"operationId": "decreaseQuantity",
+				"parameters": [
+					{
+						"name": "cartItemId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "quantity",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/person/personal-info": {
+			"get": {
+				"tags": [
+					"Аккаунт"
+				],
+				"summary": "Получение информации о пользователе",
+				"operationId": "getPersonalInfo",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PersonalInfoResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/person/payment-info": {
+			"get": {
+				"tags": [
+					"Аккаунт"
+				],
+				"summary": "Список всех Payment info пользователя",
+				"operationId": "getPaymentInfoPage",
+				"parameters": [
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 0
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PagePaymentInfoResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/person/payment-info/actual": {
+			"get": {
+				"tags": [
+					"Аккаунт"
+				],
+				"summary": "Актуальная платежная информация пользователя",
+				"operationId": "getActualPaymentInfo",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PaymentInfoResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/products": {
+			"get": {
+				"tags": [
+					"Товары"
+				],
+				"summary": "Список товаров",
+				"operationId": "getAllProducts",
+				"parameters": [
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 0
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageProductResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/products/{id}": {
+			"get": {
+				"tags": [
+					"Товары"
+				],
+				"summary": "Информация о товаре",
+				"operationId": "getProduct",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ProductResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/products/search": {
+			"get": {
+				"tags": [
+					"Товары"
+				],
+				"summary": "Поиск товаров",
+				"operationId": "searchProducts",
+				"parameters": [
+					{
+						"name": "query",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"default": ""
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 0
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageProductResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/products/categories/{categoryId}": {
+			"get": {
+				"tags": [
+					"Товары"
+				],
+				"summary": "Товары категории",
+				"operationId": "getCategoryProducts",
+				"parameters": [
+					{
+						"name": "categoryId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 0
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageProductResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/products/categories/{categoryId}/filter": {
+			"get": {
+				"tags": [
+					"Товары"
+				],
+				"summary": "Фильтрация товаров",
+				"operationId": "getFilteredProducts",
+				"parameters": [
+					{
+						"name": "categoryId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "query",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"default": ""
+						}
+					},
+					{
+						"name": "filter",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ProductResponse"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/filters/categories/{categoryId}/characteristics": {
+			"get": {
+				"tags": [
+					"Фильтры"
+				],
+				"summary": "Получить характеристики категории",
+				"operationId": "getCategoryCharacteristics",
+				"parameters": [
+					{
+						"name": "categoryId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CategoryCharacteristicsResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/couriers/orders/available": {
+			"get": {
+				"tags": [
+					"Курьеры"
+				],
+				"summary": "Доступные заказы",
+				"operationId": "getAvailableOrders",
+				"parameters": [
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 0
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageOrderForCourierResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/couriers/orders/accepted": {
+			"get": {
+				"tags": [
+					"Курьеры"
+				],
+				"summary": "Принятые заказы",
+				"operationId": "getAcceptedOrders",
+				"parameters": [
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 0
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageOrderForCourierResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/categories": {
+			"get": {
+				"tags": [
+					"Категории"
+				],
+				"summary": "Список категорий",
+				"operationId": "getAllCategories",
+				"parameters": [
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 0
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageProductCategoryResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/cart/total": {
+			"get": {
+				"tags": [
+					"Корзина"
+				],
+				"summary": "Итоговая стоимость",
+				"operationId": "getCartTotal",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "number",
+									"format": "double"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/cart/items": {
+			"get": {
+				"tags": [
+					"Корзина"
+				],
+				"summary": "Содержимое корзины",
+				"operationId": "getCartItems",
+				"parameters": [
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 0
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageCartItemResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/cart/items/{cartItemId}": {
+			"delete": {
+				"tags": [
+					"Корзина"
+				],
+				"summary": "Удалить товар",
+				"operationId": "removeCartItem",
+				"parameters": [
+					{
+						"name": "cartItemId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"OrderRequest": {
+				"required": [
+					"address",
+					"cardNumber",
+					"deliveryType",
+					"number"
+				],
+				"type": "object",
+				"properties": {
+					"number": {
+						"type": "string",
+						"description": "Номер телефона",
+						"example": "+79123456789"
+					},
+					"cardNumber": {
+						"type": "string",
+						"description": "Номер карты",
+						"example": "4111111111111111"
+					},
+					"address": {
+						"maxLength": 255,
+						"minLength": 0,
+						"type": "string",
+						"description": "Адрес доставки",
+						"example": "ул. Ленина, д. 10, кв. 5"
+					},
+					"deliveryType": {
+						"type": "string",
+						"description": "Тип доставки",
+						"example": "COURIER",
+						"enum": [
+							"COURIER",
+							"PICKUP"
+						]
+					},
+					"paymentInfoId": {
+						"minimum": 1,
+						"type": "integer",
+						"description": "Id платежной информации",
+						"format": "int64",
+						"example": 238
+					}
+				},
+				"description": "Запрос на создание заказа"
+			},
+			"OrderItemResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "ID элемента заказа",
+						"format": "int64",
+						"example": 1
+					},
+					"productId": {
+						"type": "integer",
+						"description": "ID товара",
+						"format": "int64",
+						"example": 5
+					},
+					"title": {
+						"type": "string",
+						"description": "Название товара",
+						"example": "Смартфон"
+					},
+					"description": {
+						"type": "string",
+						"description": "Описание товара",
+						"example": "Новый флагманский смартфон"
+					},
+					"price": {
+						"type": "number",
+						"description": "Цена товара",
+						"format": "double",
+						"example": 999.99
+					},
+					"quantity": {
+						"type": "integer",
+						"description": "Количество товара",
+						"format": "int32",
+						"example": 1
+					}
+				},
+				"description": "Информация о товаре в заказе"
+			},
+			"OrderResponse": {
+				"type": "object",
+				"properties": {
+					"number": {
+						"type": "string",
+						"description": "Номер телефона",
+						"example": "+79123456789"
+					},
+					"cardNumber": {
+						"type": "string",
+						"description": "Номер карты",
+						"example": "4111111111111111"
+					},
+					"address": {
+						"type": "string",
+						"description": "Адрес доставки",
+						"example": "ул. Ленина, д. 10, кв. 5"
+					},
+					"orderAmount": {
+						"type": "number",
+						"description": "Сумма заказа",
+						"format": "double",
+						"example": 1999.98
+					},
+					"deliveryType": {
+						"type": "string",
+						"description": "Тип доставки",
+						"example": "COURIER",
+						"enum": [
+							"COURIER",
+							"PICKUP"
+						]
+					},
+					"status": {
+						"type": "string",
+						"description": "Статус заказа",
+						"example": "PROCESSING",
+						"enum": [
+							"PROCESSING",
+							"SHIPPED",
+							"DELIVERED",
+							"CANCELLED"
+						]
+					},
+					"deliveryTime": {
+						"type": "string",
+						"description": "Время доставки",
+						"format": "date-time"
+					},
+					"createdAt": {
+						"type": "string",
+						"description": "Дата создания заказа",
+						"format": "date-time"
+					},
+					"orderItems": {
+						"type": "array",
+						"description": "Список товаров в заказе",
+						"items": {
+							"$ref": "#/components/schemas/OrderItemResponse"
+						}
+					}
+				},
+				"description": "Полная информация о заказе"
+			},
+			"AuthRequest": {
+				"required": [
+					"password",
+					"username"
+				],
+				"type": "object",
+				"properties": {
+					"username": {
+						"maxLength": 50,
+						"minLength": 4,
+						"type": "string",
+						"description": "Имя пользователя",
+						"example": "user123"
+					},
+					"password": {
+						"maxLength": 100,
+						"minLength": 5,
+						"type": "string",
+						"description": "Пароль",
+						"example": "password123"
+					}
+				},
+				"description": "Запрос на аутентификацию пользователя"
+			},
+			"AuthResponse": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string",
+						"description": "Имя пользователя",
+						"example": "user123"
+					},
+					"role": {
+						"type": "string",
+						"description": "Роль пользователя",
+						"example": "USER",
+						"enum": [
+							"ROLE_USER",
+							"ROLE_COURIER"
+						]
+					},
+					"token": {
+						"type": "string",
+						"description": "JWT токен",
+						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+					}
+				},
+				"description": "Ответ с данными аутентификации"
+			},
+			"OrderForCourierResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "ID заказа",
+						"format": "int64",
+						"example": 1
+					},
+					"address": {
+						"type": "string",
+						"description": "Адрес доставки",
+						"example": "ул. Ленина, д. 10, кв. 5"
+					},
+					"status": {
+						"type": "string",
+						"description": "Статус заказа",
+						"example": "PROCESSING",
+						"enum": [
+							"PROCESSING",
+							"SHIPPED",
+							"DELIVERED",
+							"CANCELLED"
+						]
+					},
+					"type": {
+						"type": "string",
+						"description": "Тип доставки",
+						"example": "COURIER",
+						"enum": [
+							"COURIER",
+							"PICKUP"
+						]
+					},
+					"createdAt": {
+						"type": "string",
+						"description": "Дата создания заказа",
+						"format": "date-time"
+					}
+				},
+				"description": "Информация о заказе для курьера"
+			},
+			"PersonalInfoResponse": {
+				"type": "object",
+				"properties": {
+					"number": {
+						"type": "string",
+						"description": "Номер телефона",
+						"example": "+79312345473"
+					},
+					"address": {
+						"type": "string",
+						"description": "Адрес",
+						"example": "ул. Марата д.12, 2 подъезд, 2 этаж, кв.45"
+					}
+				}
+			},
+			"PagePaymentInfoResponse": {
+				"type": "object",
+				"properties": {
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PaymentInfoResponse"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"empty": {
+						"type": "boolean"
+					}
+				}
+			},
+			"PageableObject": {
+				"type": "object",
+				"properties": {
+					"offset": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"unpaged": {
+						"type": "boolean"
+					},
+					"pageNumber": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageSize": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"paged": {
+						"type": "boolean"
+					}
+				}
+			},
+			"PaymentInfoResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "Id",
+						"format": "int64",
+						"example": 865
+					},
+					"cardNumber": {
+						"type": "string",
+						"description": "Номер карты",
+						"example": "5423 4356 7866 9889"
+					},
+					"actual": {
+						"type": "boolean"
+					}
+				}
+			},
+			"SortObject": {
+				"type": "object",
+				"properties": {
+					"empty": {
+						"type": "boolean"
+					},
+					"unsorted": {
+						"type": "boolean"
+					},
+					"sorted": {
+						"type": "boolean"
+					}
+				}
+			},
+			"PageProductResponse": {
+				"type": "object",
+				"properties": {
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ProductResponse"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"empty": {
+						"type": "boolean"
+					}
+				}
+			},
+			"ProductCharacteristicResponse": {
+				"required": [
+					"characteristicValue",
+					"typeTitle"
+				],
+				"type": "object",
+				"properties": {
+					"characteristicId": {
+						"type": "integer",
+						"description": "ID характеристики",
+						"format": "int64",
+						"example": 25
+					},
+					"characteristicValue": {
+						"type": "string",
+						"description": "Значение характеристики",
+						"example": "Черный"
+					},
+					"typeId": {
+						"type": "integer",
+						"description": "ID типа характеристики",
+						"format": "int64",
+						"example": 3
+					},
+					"typeTitle": {
+						"type": "string",
+						"description": "Название типа характеристики",
+						"example": "Цвет"
+					},
+					"typeDescription": {
+						"type": "string",
+						"description": "Описание типа характеристики",
+						"example": "Основной цвет корпуса"
+					}
+				},
+				"description": "Характеристика товара"
+			},
+			"ProductResponse": {
+				"required": [
+					"price",
+					"title"
+				],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "ID товара",
+						"format": "int64",
+						"example": 10
+					},
+					"title": {
+						"type": "string",
+						"description": "Название товара",
+						"example": "Смартфон Galaxy S23 Ultra"
+					},
+					"description": {
+						"type": "string",
+						"description": "Подробное описание товара",
+						"example": "Флагманский смартфон с S-пером и камерой 200 МП"
+					},
+					"price": {
+						"type": "number",
+						"description": "Цена товара",
+						"format": "double",
+						"example": 1299.99
+					},
+					"quantity": {
+						"minimum": 0,
+						"type": "integer",
+						"description": "Доступное количество на складе",
+						"format": "int32",
+						"example": 15
+					},
+					"characteristics": {
+						"type": "array",
+						"description": "Список характеристик товара",
+						"items": {
+							"$ref": "#/components/schemas/ProductCharacteristicResponse"
+						}
+					}
+				},
+				"description": "Полная информация о товаре"
+			},
+			"PageOrderResponse": {
+				"type": "object",
+				"properties": {
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/OrderResponse"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"empty": {
+						"type": "boolean"
+					}
+				}
+			},
+			"CategoryCharacteristicsResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "ID категории",
+						"format": "int64",
+						"example": 1
+					},
+					"title": {
+						"type": "string",
+						"description": "Название категории",
+						"example": "Электроника"
+					},
+					"description": {
+						"type": "string",
+						"description": "Описание категории",
+						"example": "Техника и электронные устройства"
+					},
+					"characteristicTypes": {
+						"type": "array",
+						"description": "Список типов характеристик",
+						"items": {
+							"$ref": "#/components/schemas/CharacteristicTypeResponse"
+						}
+					}
+				},
+				"description": "Характеристики категории товаров"
+			},
+			"CharacteristicResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "ID характеристики",
+						"format": "int64",
+						"example": 1
+					},
+					"textValue": {
+						"type": "string",
+						"description": "Текстовое значение",
+						"example": "Черный"
+					},
+					"numericValue": {
+						"type": "number",
+						"description": "Числовое значение",
+						"format": "double",
+						"example": 15.5
+					}
+				},
+				"description": "Характеристика товара"
+			},
+			"CharacteristicTypeResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "ID типа характеристики",
+						"format": "int64",
+						"example": 1
+					},
+					"title": {
+						"type": "string",
+						"description": "Название типа",
+						"example": "Цвет"
+					},
+					"description": {
+						"type": "string",
+						"description": "Описание типа",
+						"example": "Основной цвет устройства"
+					},
+					"characteristics": {
+						"type": "array",
+						"description": "Список характеристик",
+						"items": {
+							"$ref": "#/components/schemas/CharacteristicResponse"
+						}
+					}
+				},
+				"description": "Тип характеристики"
+			},
+			"PageOrderForCourierResponse": {
+				"type": "object",
+				"properties": {
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/OrderForCourierResponse"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"empty": {
+						"type": "boolean"
+					}
+				}
+			},
+			"PageProductCategoryResponse": {
+				"type": "object",
+				"properties": {
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ProductCategoryResponse"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"empty": {
+						"type": "boolean"
+					}
+				}
+			},
+			"ProductCategoryResponse": {
+				"required": [
+					"title"
+				],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "ID категории",
+						"format": "int64",
+						"example": 1
+					},
+					"title": {
+						"type": "string",
+						"description": "Название категории",
+						"example": "Электроника"
+					},
+					"description": {
+						"type": "string",
+						"description": "Описание категории",
+						"example": "Техника и электронные устройства"
+					}
+				},
+				"description": "Информация о категории товаров"
+			},
+			"CartItemResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "ID элемента корзины",
+						"format": "int64",
+						"example": 1
+					},
+					"productId": {
+						"type": "integer",
+						"description": "ID товара",
+						"format": "int64",
+						"example": 5
+					},
+					"title": {
+						"type": "string",
+						"description": "Название товара",
+						"example": "Смартфон"
+					},
+					"description": {
+						"type": "string",
+						"description": "Описание товара",
+						"example": "Новый флагманский смартфон"
+					},
+					"price": {
+						"type": "number",
+						"description": "Цена товара",
+						"format": "double",
+						"example": 999.99
+					},
+					"quantity": {
+						"type": "integer",
+						"description": "Количество товара",
+						"format": "int32",
+						"example": 2
+					}
+				},
+				"description": "Информация о товаре в корзине"
+			},
+			"PageCartItemResponse": {
+				"type": "object",
+				"properties": {
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/CartItemResponse"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"empty": {
+						"type": "boolean"
+					}
+				}
+			}
+		},
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	}
+}
