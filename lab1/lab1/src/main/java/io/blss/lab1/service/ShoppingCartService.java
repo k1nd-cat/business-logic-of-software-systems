@@ -108,6 +108,7 @@ public class ShoppingCartService {
     public void removePromoCode() {
         final var shoppingCart = getUserShoppingCart();
         shoppingCart.setPromoCode(null);
+        shoppingCartRepository.save(shoppingCart);
     }
 
     public Double getPrice() {
