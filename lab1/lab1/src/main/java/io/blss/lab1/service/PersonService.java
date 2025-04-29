@@ -1,5 +1,6 @@
 package io.blss.lab1.service;
 
+import io.blss.lab1.dto.OrderRequest;
 import io.blss.lab1.dto.OrderResponse;
 import io.blss.lab1.dto.PaymentInfoResponse;
 import io.blss.lab1.dto.PersonalInfoResponse;
@@ -7,6 +8,7 @@ import io.blss.lab1.entity.PaymentInfo;
 import io.blss.lab1.entity.PersonalInfo;
 import io.blss.lab1.entity.User;
 import io.blss.lab1.repository.PaymentInfoRepository;
+import io.blss.lab1.repository.PersonalInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,8 @@ public class PersonService {
     private final PaymentInfoRepository paymentInfoRepository;
 
     private final UserService userService;
+
+    private final PersonalInfoRepository personalInfoRepository;
 
     public PaymentInfoResponse getActualPaymentInfo() {
         final User user = userService.getCurrentUser();
@@ -55,5 +59,29 @@ public class PersonService {
                 .isActual(paymentInfo.isActual())
                 .build()
         );
+    }
+
+    public PaymentInfo changeActualPaymentInfo(User user, String cardNumber) {
+        final var actualPaymentInfo = paymentInfoRepository.findByUserAndIsActual(user, true).orElse(null);
+
+        if(actualPaymentInfo != null) {
+            actualPaymentInfo.setActual(false);
+            paymentInfoRepository.save(actualPaymentInfo);
+        }
+
+        var paymentInfo = paymentInfoRepository.findByUserAndCardNumber(user, cardNumber)
+                .orElse(PaymentInfo.builder()
+                        .cardNumber(cardNumber)
+                        .user(user)
+                        .build());
+        paymentInfo.setActual(true);
+        return paymentInfoRepository.save(paymentInfo);
+    }
+
+    public PersonalInfo updatePersonalInfo(User user, OrderRequest orderRequest) {
+        var personalInfo = personalInfoRepository.findByUser(user)
+                .orElse(PersonalInfo.builder().user(user).build());
+        personalInfo = orderRequest.updatePersonalInfo(personalInfo);
+        return personalInfoRepository.save(personalInfo);
     }
 }
