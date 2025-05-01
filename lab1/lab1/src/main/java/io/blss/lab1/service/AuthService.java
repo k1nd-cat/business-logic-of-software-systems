@@ -4,6 +4,7 @@ import io.blss.lab1.dto.AuthRequest;
 import io.blss.lab1.dto.AuthResponse;
 import io.blss.lab1.entity.ShoppingCart;
 import io.blss.lab1.entity.User;
+import io.blss.lab1.entity.XmlUser;
 import io.blss.lab1.exception.UsernameAlreadyExistsException;
 import io.blss.lab1.repository.ShoppingCartRepository;
 import io.blss.lab1.repository.UserRepository;
@@ -23,6 +24,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final ShoppingCartRepository shoppingCartRepository;
+
+    private final XmlUserService xmlUserService;
 
     public AuthResponse signUpUser(AuthRequest authRequest) {
         return signUp(authRequest, User.Role.ROLE_USER);
@@ -55,6 +58,7 @@ public class AuthService {
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user = userService.save(user);
+        xmlUserService.create(XmlUser.fromUser(user));
         final var token = jwtService.generateToken(user);
 
         if (role == User.Role.ROLE_USER) {
@@ -66,4 +70,3 @@ public class AuthService {
         return AuthResponse.fromUser(user, token);
     }
 }
-

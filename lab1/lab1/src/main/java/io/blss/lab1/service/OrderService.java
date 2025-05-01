@@ -4,16 +4,19 @@ import io.blss.lab1.dto.OrderRequest;
 import io.blss.lab1.dto.OrderResponse;
 import io.blss.lab1.entity.*;
 import io.blss.lab1.exception.InvalidOrderException;
+import io.blss.lab1.exception.OrderNotAvailableException;
 import io.blss.lab1.repository.OrderItemRepository;
 import io.blss.lab1.repository.OrderRepository;
+import io.blss.lab1.repository.PaymentInfoRepository;
+import io.blss.lab1.repository.PersonalInfoRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,20 +34,26 @@ public class OrderService {
 
     private final PersonService personService;
 
-    private final PlatformTransactionManager transactionManager;
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
-    private final DataSource dataSource;
+    private final PaymentInfoRepository paymentInfoRepository;
 
     @Transactional
     public OrderResponse makeOrder(OrderRequest orderRequest) {
 
-        System.out.println(">>> Transaction Manager: " + transactionManager.getClass().getName());
-        System.out.println(">>> DataSource class: " + dataSource.getClass().getName()); // Выведи класс DataSource
         final var user = userService.getCurrentUser();
+        var actualPaymentInfo = paymentInfoRepository.findByUserAndIsActual(user, true).orElse(null);
+        log.info("Актуальный номер карты до выполнения изменений: {}", actualPaymentInfo != null ? actualPaymentInfo.getCardNumber() : "Не существует");
         final var paymentInfo = personService.changeActualPaymentInfo(user, orderRequest.getCardNumber());
         final var personalInfo = personService.updatePersonalInfo(user, orderRequest);
         final var order = orderRepository.save(buildOrder(user, paymentInfo, orderRequest));
-        moveProducts2Order(user, order);
+        try {
+            moveProducts2Order(user, order);
+        } catch (InvalidOrderException e) {
+            actualPaymentInfo = paymentInfoRepository.findByUserAndIsActual(user, true).orElse(null);
+            log.info("Актуальный номер карты перед исключением: {}", actualPaymentInfo != null ? actualPaymentInfo.getCardNumber() : "Не существует");
+            throw e;
+        }
 
         return OrderResponse.fromOrderAndPersonalInfoAndPaymentInfo(order, personalInfo, paymentInfo);
     }

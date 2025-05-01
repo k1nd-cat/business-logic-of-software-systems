@@ -1,15 +1,16 @@
 package io.blss.lab1.repository;
 
-import io.blss.lab1.entity.Order;
 import io.blss.lab1.entity.PaymentInfo;
 import io.blss.lab1.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface PaymentInfoRepository extends JpaRepository<PaymentInfo, Long> {
         List<PaymentInfo> findByUser(User user);
 
