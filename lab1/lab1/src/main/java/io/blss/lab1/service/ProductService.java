@@ -18,10 +18,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +57,7 @@ public class ProductService {
                 () -> new ProductNotFoundException("Невозможно добавить продукт в корзину, поскольку его не существует")
         );
 
-        if (user.getRole() != User.Role.ROLE_USER)
+        if (!Objects.equals(user.getRole().getName(), "USER_ROLE"))
             throw new AccessDeniedException("Сотрудники не могут делать заказы");
 
         if (product.getQuantity() == 0)

@@ -1,12 +1,12 @@
-INSERT INTO users (username, role, password) VALUES
-('u', 'ROLE_USER', '$2a$10$//.3D7CjGJfsaJnUk0lcfuPnjJKM/dxwaqbI70M5sBxE7Id4.W5MK');
-
-INSERT INTO users (username, role, password) VALUES
-('c', 'ROLE_COURIER', '$2a$10$//.3D7CjGJfsaJnUk0lcfuPnjJKM/dxwaqbI70M5sBxE7Id4.W5MK');
-
-
-INSERT INTO shopping_cart (user_id) VALUES
-(1);
+--INSERT INTO users (username, role, password) VALUES
+--('u', 'ROLE_USER', '$2a$10$//.3D7CjGJfsaJnUk0lcfuPnjJKM/dxwaqbI70M5sBxE7Id4.W5MK');
+--
+--INSERT INTO users (username, role, password) VALUES
+--('c', 'ROLE_COURIER', '$2a$10$//.3D7CjGJfsaJnUk0lcfuPnjJKM/dxwaqbI70M5sBxE7Id4.W5MK');
+--
+--
+--INSERT INTO shopping_cart (user_id) VALUES
+--(1);
 
 insert into product_category(title, description) values
     ('смартфоны', 'Мобильные телефоны различных брендов');

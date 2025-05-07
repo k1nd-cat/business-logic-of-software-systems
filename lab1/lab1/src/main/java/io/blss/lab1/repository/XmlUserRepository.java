@@ -58,7 +58,7 @@ public class XmlUserRepository {
                 .filter(u -> u.getUsername().equals(user.getUsername()))
                 .findFirst();
         if (existingUser.isPresent()) {
-            user.setId(existingUser.get().getId()); // Сохраняем ID
+            user.setId(existingUser.get().getId());
             users.remove(existingUser.get());
             users.add(user);
         } else {

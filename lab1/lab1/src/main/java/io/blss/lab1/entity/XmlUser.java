@@ -2,6 +2,7 @@ package io.blss.lab1.entity;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +13,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-@XmlRootElement
+@XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Data
 @Builder
@@ -25,20 +27,31 @@ public class XmlUser implements UserDetails {
     private Long id;
     private String username;
     private String password;
-    private User.Role role;
+
+    @XmlElement(name = "roleName")
+    private String roleName;
 
     public static XmlUser fromUser(User user) {
-        return  XmlUser.builder()
+        if (user == null) {
+            return null;
+        }
+        XmlUserBuilder builder = XmlUser.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .password(user.getPassword())
-                .role(user.getRole())
-                .build();
+                .password(user.getPassword());
+
+        if (user.getRole() != null) {
+            builder.roleName(user.getRole().getName());
+        }
+        return builder.build();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        if (roleName != null && !roleName.isEmpty()) {
+            return List.of(new SimpleGrantedAuthority(roleName));
+        }
+        return Collections.emptyList();
     }
 
     @Override
