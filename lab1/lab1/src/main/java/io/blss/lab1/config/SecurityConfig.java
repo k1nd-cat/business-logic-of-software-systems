@@ -47,7 +47,7 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/user/**", "/route/**", "/route/add/file", "/func/**", "/log/**").authenticated() // Оставляем как есть
+                        .requestMatchers("/user/**", "/route/**", "/route/add/file", "/func/**", "/log/**").authenticated()
 
                         .requestMatchers("/api/cart/**").hasAuthority(PERM_MANAGE_CART)
                         .requestMatchers("/api/orders/**").hasAuthority(PERM_MANAGE_ORDERS)
