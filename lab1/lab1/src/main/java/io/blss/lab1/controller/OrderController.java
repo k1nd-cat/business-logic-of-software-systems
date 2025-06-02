@@ -23,6 +23,14 @@ public class OrderController {
         return orderService.makeOrder(orderRequest);
     }
 
+/*
+    @PostMapping("cancel/{orderId}")
+    @Operation(summary = "Отменить заказ")
+    public void cancelOrder(@PathVariable Long orderId) {
+        orderService.cancelOrder(orderId);
+    }
+*/
+
     @GetMapping
     @Operation(summary = "История заказов")
     public Page<OrderResponse> getOrderHistory(

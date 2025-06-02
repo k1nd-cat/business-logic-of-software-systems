@@ -47,6 +47,9 @@ public class Order {
     @Column(name = "delivered_at", columnDefinition = "TIMESTAMP")
     private Date deliveredAt;
 
+    @Column(name = "canceled_at", columnDefinition = "TIMESTAMP")
+    private Date canceledAt;
+
     @Column(name = "delivery_time", columnDefinition = "TIMESTAMP")
     private Date deliveryTime;
 

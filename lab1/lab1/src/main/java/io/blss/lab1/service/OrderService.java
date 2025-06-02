@@ -4,11 +4,11 @@ import io.blss.lab1.dto.OrderRequest;
 import io.blss.lab1.dto.OrderResponse;
 import io.blss.lab1.entity.*;
 import io.blss.lab1.exception.InvalidOrderException;
-import io.blss.lab1.exception.OrderNotAvailableException;
+import io.blss.lab1.exception.OrderNotFoundException;
 import io.blss.lab1.repository.OrderItemRepository;
 import io.blss.lab1.repository.OrderRepository;
 import io.blss.lab1.repository.PaymentInfoRepository;
-import io.blss.lab1.repository.PersonalInfoRepository;
+import io.blss.lab1.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +38,8 @@ public class OrderService {
 
     private final PaymentInfoRepository paymentInfoRepository;
 
+    private final ProductRepository productRepository;
+
     @Transactional
     public OrderResponse makeOrder(OrderRequest orderRequest) {
 
@@ -58,9 +60,24 @@ public class OrderService {
         return OrderResponse.fromOrderAndPersonalInfoAndPaymentInfo(order, personalInfo, paymentInfo);
     }
 
+    public void cancelOrder(Long orderId) {
+        final var order = orderRepository.findByIdWithItems(orderId).orElseThrow(
+                () -> new OrderNotFoundException("Заказа не существует")
+        );
+        final var orderItems = order.getOrderItems();
+        for (var orderItem : orderItems) {
+            final var product = orderItem.getProduct();
+            product.setQuantity(product.getQuantity() + orderItem.getQuantity());
+            productRepository.save(product);
+        }
+        order.setCanceledAt(new Date());
+        order.setStatus(Order.OrderStatus.CANCELLED);
+        orderRepository.save(order);
+    }
+
     public Page<OrderResponse> getOrderHistory(Pageable pageable) {
         final var user = userService.getCurrentUser();
-        final var orders = orderRepository.findAllByUserOrderByCreatedAtDesc(user, pageable);
+        final var orders = orderRepository.findAllByUserOrderByCreatedAtDescWithItems(user, pageable);
         return orders.map(
                 (order) ->
                         OrderResponse.fromOrderAndPersonalInfoAndPaymentInfo(order, user.getPersonalInfo(), order.getPaymentInfo())

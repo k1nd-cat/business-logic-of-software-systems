@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query(value = "SELECT COUNT(o) FROM Order o WHERE o.user = :user")
@@ -19,4 +21,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findAllByStatusOrderByCreatedAtAsc(Order.OrderStatus status, Pageable pageable);
 
     Page<Order> findAllByCourierAndStatus(User courier, Order.OrderStatus status, Pageable pageable);
+
+    @Query("SELECT o FROM Order o JOIN FETCH o.orderItems WHERE o.user = :user ORDER BY o.createdAt DESC")
+    Page<Order> findAllByUserOrderByCreatedAtDescWithItems(@Param("user") User user, Pageable pageable);
+
+    @Query("SELECT o FROM Order o JOIN FETCH o.orderItems WHERE o.id = :id")
+    Optional<Order> findByIdWithItems(@Param("id") Long id);
 }
