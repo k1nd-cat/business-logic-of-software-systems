@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class Order {
     private DeliveryType deliveryType;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
-    private Date createdAt;
+    private Instant createdAt;
 
     @Column(name = "delivered_at", columnDefinition = "TIMESTAMP")
     private Date deliveredAt;
@@ -74,6 +75,8 @@ public class Order {
     }
 
     public enum OrderStatus {
+        // ожидает оплаты
+        PENDING_PAYMENT,
 //        обрабатывается
         PROCESSING,
 
@@ -85,5 +88,7 @@ public class Order {
 
 //        отменен
         CANCELLED,
+        // не дождался оплаты
+        CANCELLED_TIMEOUT
     }
 }

@@ -2,9 +2,11 @@ package io.blss.lab1.dto;
 
 import io.blss.lab1.entity.Order;
 import io.swagger.v3.oas.annotations.media.Schema;
+//import jakarta.enterprise.inject.Instance;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Schema(description = "Информация о заказе для курьера")
@@ -25,7 +27,7 @@ public class OrderForCourierResponse {
     private Order.DeliveryType type;
 
     @Schema(description = "Дата создания заказа", example = "2023-05-15T14:30:00")
-    private Date createdAt;
+    private Instant createdAt;
 
     public static OrderForCourierResponse fromOrder(Order order) {
         return OrderForCourierResponse.builder()

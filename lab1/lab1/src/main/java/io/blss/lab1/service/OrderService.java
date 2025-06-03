@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,7 +72,9 @@ public class OrderService {
             productRepository.save(product);
         }
         order.setCanceledAt(new Date());
-        order.setStatus(Order.OrderStatus.CANCELLED);
+        if (order.getStatus() != Order.OrderStatus.CANCELLED_TIMEOUT) {
+            order.setStatus(Order.OrderStatus.CANCELLED);
+        }
         orderRepository.save(order);
     }
 
@@ -89,9 +92,9 @@ public class OrderService {
         final var fullPrice = shoppingCartService.getPrice();
         orderBuilder.setUser(user);
         orderBuilder.setPaymentInfo(paymentInfo);
-        orderBuilder.setStatus(Order.OrderStatus.PROCESSING);
+        orderBuilder.setStatus(Order.OrderStatus.PENDING_PAYMENT);
         orderBuilder.setOrderAmount(fullPrice);
-        orderBuilder.setCreatedAt(new Date());
+        orderBuilder.setCreatedAt(Instant.now());
 
         return orderBuilder;
     }
@@ -116,4 +119,5 @@ public class OrderService {
 
         order.setOrderItems(orderItems);
     }
+
 }

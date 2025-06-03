@@ -22,8 +22,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
-    private final ProductRepository productRepository;
+public class ProductService { private final ProductRepository productRepository;
     private final UserService userService;
     private final CartItemRepository cartItemRepository;
     private final ProductCategoryRepository productCategoryRepository;

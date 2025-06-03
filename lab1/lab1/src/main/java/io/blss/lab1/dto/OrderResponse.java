@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class OrderResponse {
     private Date deliveryTime;
 
     @Schema(description = "Дата создания заказа", example = "2023-05-15T14:30:00")
-    private Date createdAt;
+    private Instant createdAt;
 
     @Schema(description = "Список товаров в заказе")
     private List<OrderItemResponse> orderItems;
