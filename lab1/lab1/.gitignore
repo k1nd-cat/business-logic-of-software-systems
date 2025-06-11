@@ -35,3 +35,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+ObjectStore
+PutObjectStoreDirHere
+transaction-logs
+users.xml
+PutObjectStoreDirHere
+ObjectStore
+transaction-logs

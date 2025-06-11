@@ -2,13 +2,18 @@ package io.blss.lab1.service;
 
 import io.blss.lab1.dto.OrderRequest;
 import io.blss.lab1.dto.OrderResponse;
+import io.blss.lab1.dto.ReceiptDto;
+import io.blss.lab1.dto.RobokassaRequestDto;
 import io.blss.lab1.entity.*;
 import io.blss.lab1.exception.InvalidOrderException;
+import io.blss.lab1.exception.OrderNotAvailableException;
 import io.blss.lab1.exception.OrderNotFoundException;
 import io.blss.lab1.repository.OrderItemRepository;
 import io.blss.lab1.repository.OrderRepository;
 import io.blss.lab1.repository.PaymentInfoRepository;
 import io.blss.lab1.repository.ProductRepository;
+import io.blss.lab1.robokassa.Payment;
+import io.blss.lab1.robokassa.impl.RobokassaClientImpl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +22,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +48,14 @@ public class OrderService {
 
     private final ProductRepository productRepository;
 
+    private final JmsService jmsService;
+
+    private final MinioService minioService;
+
+    private final PaymentService paymentService;
+
     @Transactional
-    public OrderResponse makeOrder(OrderRequest orderRequest) {
+    public String makeOrder(OrderRequest orderRequest) {
 
         final var user = userService.getCurrentUser();
         var actualPaymentInfo = paymentInfoRepository.findByUserAndIsActual(user, true).orElse(null);
@@ -57,8 +71,16 @@ public class OrderService {
             throw e;
         }
 
-        return OrderResponse.fromOrderAndPersonalInfoAndPaymentInfo(order, personalInfo, paymentInfo);
+        final var payment = Payment.builder()
+                .invoiceRef(order.getId().toString())
+                .amount(1.0)
+                .comment("Оплата товаров")
+                .commentData("Комментарий к заказу")
+                .build();
+
+        return paymentService.createPaymentUrl(payment);
     }
+
 
     public void cancelOrder(Long orderId) {
         final var order = orderRepository.findByIdWithItems(orderId).orElseThrow(
@@ -71,7 +93,9 @@ public class OrderService {
             productRepository.save(product);
         }
         order.setCanceledAt(new Date());
-        order.setStatus(Order.OrderStatus.CANCELLED);
+        if (order.getStatus() != Order.OrderStatus.CANCELLED_TIMEOUT)
+            order.setStatus(Order.OrderStatus.CANCELLED);
+
         orderRepository.save(order);
     }
 
@@ -89,9 +113,10 @@ public class OrderService {
         final var fullPrice = shoppingCartService.getPrice();
         orderBuilder.setUser(user);
         orderBuilder.setPaymentInfo(paymentInfo);
-        orderBuilder.setStatus(Order.OrderStatus.PROCESSING);
+        orderBuilder.setStatus(Order.OrderStatus.PENDING_PAYMENT);
         orderBuilder.setOrderAmount(fullPrice);
-        orderBuilder.setCreatedAt(new Date());
+        orderBuilder.setCreatedAt(Instant.now());
+        orderBuilder.setPromoCode(user.getShoppingCart().getPromoCode());
 
         return orderBuilder;
     }
@@ -115,5 +140,37 @@ public class OrderService {
         }
 
         order.setOrderItems(orderItems);
+    }
+
+    public InputStream getReceipt(Long orderId) {
+        final var user = userService.getCurrentUser();
+        final var order = orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException("Заказ не найден")
+        );
+
+        if (!Objects.equals(order.getUser().getId(), user.getId()))
+            throw new OrderNotAvailableException("Пользователь не может получить чек чужого заказа");
+
+        if (order.getStatus() == Order.OrderStatus.PENDING_PAYMENT
+                || order.getStatus() == Order.OrderStatus.CANCELLED
+                || order.getStatus() == Order.OrderStatus.CANCELLED_TIMEOUT)
+            throw new OrderNotAvailableException("Заказ был отменён или не оплачен");
+
+        try {
+            return minioService.downloadFile(user.getId() + "_" + orderId + ".pdf");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void successfulPayment(Long orderId) {
+        final var order = orderRepository.findByIdWithItems(orderId).orElseThrow(
+                () -> new OrderNotFoundException("Заказ не найден, вы зря оплатили :(")
+        );
+        order.setStatus(Order.OrderStatus.PROCESSING);
+        orderRepository.save(order);
+
+        final var receiptDto = ReceiptDto.fromOrder(order);
+        jmsService.sendOrderMessage(receiptDto);
     }
 }

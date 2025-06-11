@@ -1,0 +1,21 @@
+@startuml
+
+!define RECTANGLE class
+
+package Docker as d1 {
+  [RabbitMQ]
+}
+
+package Docker as d2 {
+  [Minio]
+}
+
+[MainApplication] -- [PostgreSQL]  readswrites
+[MainApplication] -- [Minio]  reads
+[MainApplication] -- [EIS Robokassa]  interacts
+[MainApplication] -- [RabbitMQ]  sends JMS messages
+
+[ReceiptGeneratorApplication] -- [RabbitMQ]  receives JMS messages
+[ReceiptGeneratorApplication] -- [Minio]  writes
+
+@enduml

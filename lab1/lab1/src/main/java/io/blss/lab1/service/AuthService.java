@@ -29,7 +29,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final ShoppingCartRepository shoppingCartRepository;
-    private final XmlUserService xmlUserService;
+//    private final XmlUserService xmlUserService;
 
     private static final String USER_ROLE_NAME = "USER_ROLE";
     private static final String COURIER_ROLE_NAME = "COURIER_ROLE";
@@ -76,7 +76,7 @@ public class AuthService {
 
         user = userRepository.save(user);
 
-        xmlUserService.create(XmlUser.fromUser(user));
+//        xmlUserService.create(XmlUser.fromUser(user));
 
         final String token = jwtService.generateToken(user);
 

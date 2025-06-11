@@ -24,7 +24,7 @@ public class Characteristic {
     @Column(name = "numeric_value")
     private Double numericValue;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id")
     private CharacteristicType type;
 

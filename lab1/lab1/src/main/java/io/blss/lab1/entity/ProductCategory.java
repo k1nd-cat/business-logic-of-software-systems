@@ -25,7 +25,7 @@ public class ProductCategory {
 
     private String description;
 
-    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Product> products;
 
     @ManyToMany(mappedBy = "productCategories")
