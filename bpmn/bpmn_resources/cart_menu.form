@@ -1,0 +1,53 @@
+{
+  "components": [
+    {
+      "label": "Меню корзины",
+      "values": [
+        {
+          "label": "Увеличить количество товара",
+          "value": "increase_quantity"
+        },
+        {
+          "label": "Уменьшить количество товара",
+          "value": "decrease_quantity"
+        },
+        {
+          "label": "Удалить товар из корзины",
+          "value": "remove_product"
+        },
+        {
+          "label": "Применить промокод",
+          "value": "add_promocode"
+        },
+        {
+          "label": "Удалить промокод",
+          "value": "delete_promocode"
+        },
+        {
+          "label": "Узнать полную стоимость",
+          "value": "get_price"
+        },
+        {
+          "label": "Вернуться в корзину",
+          "value": "back_to_cart"
+        }
+      ],
+      "type": "radio",
+      "layout": {
+        "row": "Row_1k6dcwt",
+        "columns": null
+      },
+      "id": "Field_1j7ll0w",
+      "key": "radio_cart_menu"
+    }
+  ],
+  "type": "default",
+  "id": "CartMenu",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.38.1"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 19
+}

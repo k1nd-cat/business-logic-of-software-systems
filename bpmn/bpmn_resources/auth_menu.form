@@ -1,0 +1,34 @@
+{
+  "components": [
+    {
+      "label": "Меню авторизации",
+      "values": [
+        {
+          "label": "Вход в систему",
+          "value": "sign_in_value"
+        },
+        {
+          "label": "Регистрация",
+          "value": "sign_up_value"
+        }
+      ],
+      "type": "radio",
+      "layout": {
+        "row": "Row_0o8xn48",
+        "columns": null
+      },
+      "id": "Field_0kllpq3",
+      "key": "radio_auth_menu",
+      "defaultValue": "sign_in_value"
+    }
+  ],
+  "type": "default",
+  "id": "AuthMenu",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.38.1"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 19
+}

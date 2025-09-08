@@ -1,0 +1,45 @@
+{
+  "components": [
+    {
+      "label": "Radio group",
+      "values": [
+        {
+          "label": "Посмотреть категории товаров",
+          "value": "show_category_list"
+        },
+        {
+          "label": "Ввести префикс товара",
+          "value": "input_prefix"
+        },
+        {
+          "label": "Добавить товар в корзину",
+          "value": "add_to_cart"
+        },
+        {
+          "label": "Перейти в корзину",
+          "value": "go_to_shopping_cart"
+        },
+        {
+          "label": "Вернуться к выбору продуктов",
+          "value": "back_to_product_list"
+        }
+      ],
+      "type": "radio",
+      "layout": {
+        "row": "Row_0n6j9fj",
+        "columns": null
+      },
+      "id": "Field_0f9w1os",
+      "key": "radio_shop_menu"
+    }
+  ],
+  "type": "default",
+  "id": "ShopMenu",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.38.1"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 19
+}

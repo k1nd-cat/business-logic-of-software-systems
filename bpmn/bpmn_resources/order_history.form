@@ -1,0 +1,46 @@
+{
+  "components": [
+    {
+      "type": "table",
+      "layout": {
+        "row": "Row_0npesta",
+        "columns": null
+      },
+      "label": "Table",
+      "rowCount": 10,
+      "columns": [
+        {
+          "key": "id",
+          "label": "ID Заказа"
+        },
+        {
+          "key": "address",
+          "label": "Адрес доставки"
+        },
+        {
+          "label": "Дата создания",
+          "key": "createdAt"
+        },
+        {
+          "label": "Статус",
+          "key": "status"
+        },
+        {
+          "label": "Итоговая стоимость",
+          "key": "orderAmount"
+        }
+      ],
+      "id": "Field_1tjxjb9",
+      "dataSource": "=orderHistory"
+    }
+  ],
+  "type": "default",
+  "id": "OrderHistory",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.38.1"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 19
+}

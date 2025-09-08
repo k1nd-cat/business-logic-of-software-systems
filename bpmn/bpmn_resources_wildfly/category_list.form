@@ -1,0 +1,38 @@
+{
+  "components": [
+    {
+      "type": "table",
+      "layout": {
+        "row": "Row_0hlj3su",
+        "columns": null
+      },
+      "label": "Table",
+      "rowCount": 10,
+      "columns": [
+        {
+          "label": "ID",
+          "key": "id"
+        },
+        {
+          "key": "title",
+          "label": "Название категории"
+        },
+        {
+          "key": "description",
+          "label": "Описание"
+        }
+      ],
+      "id": "Field_0sqan0a",
+      "dataSource": "=categories"
+    }
+  ],
+  "type": "default",
+  "id": "CategoryList",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.38.1"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 19
+}

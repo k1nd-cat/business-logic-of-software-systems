@@ -1,0 +1,46 @@
+{
+  "components": [
+    {
+      "type": "table",
+      "layout": {
+        "row": "Row_1sx4i06",
+        "columns": null
+      },
+      "label": "Table",
+      "rowCount": 10,
+      "columns": [
+        {
+          "label": "Id товара в корзине",
+          "key": "id"
+        },
+        {
+          "label": "Название товара",
+          "key": "title"
+        },
+        {
+          "key": "description",
+          "label": "Описание"
+        },
+        {
+          "key": "price",
+          "label": "Цена"
+        },
+        {
+          "label": "Количество",
+          "key": "quantity"
+        }
+      ],
+      "id": "Field_16uxyyw",
+      "dataSource": "=shoppingCartContent"
+    }
+  ],
+  "type": "default",
+  "id": "CartList",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.38.1"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 19
+}

@@ -1,0 +1,33 @@
+{
+  "components": [
+    {
+      "label": "Radio group",
+      "values": [
+        {
+          "label": "Смотреть продукты",
+          "value": "watch_products"
+        },
+        {
+          "label": "Авторизация",
+          "value": "auth"
+        }
+      ],
+      "type": "radio",
+      "layout": {
+        "row": "Row_05825sc",
+        "columns": 16
+      },
+      "id": "Field_072xmgo",
+      "key": "radio_start_menu"
+    }
+  ],
+  "type": "default",
+  "id": "StartMenu",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.38.1"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 19
+}

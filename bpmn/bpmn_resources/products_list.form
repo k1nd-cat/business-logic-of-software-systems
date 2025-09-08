@@ -1,0 +1,46 @@
+{
+  "components": [
+    {
+      "type": "table",
+      "layout": {
+        "row": "Row_1s3tmeg",
+        "columns": null
+      },
+      "label": "Список категорий",
+      "dataSource": "=showList",
+      "rowCount": 10,
+      "id": "Field_0n5ccmy",
+      "columns": [
+        {
+          "label": "ID",
+          "key": "id"
+        },
+        {
+          "label": "Название",
+          "key": "title"
+        },
+        {
+          "label": "Описание",
+          "key": "description"
+        },
+        {
+          "key": "price",
+          "label": "Цена"
+        },
+        {
+          "key": "quantity",
+          "label": "Количество"
+        }
+      ]
+    }
+  ],
+  "type": "default",
+  "id": "ProductsList",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.38.1"
+  },
+  "schemaVersion": 19
+}

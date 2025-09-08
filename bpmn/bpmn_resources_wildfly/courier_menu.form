@@ -1,0 +1,37 @@
+{
+  "components": [
+    {
+      "label": "Меню курьера",
+      "values": [
+        {
+          "label": "Доступные для выбора заказы",
+          "value": "availableOders"
+        },
+        {
+          "label": "Мои заказы",
+          "value": "acceptedOrders"
+        },
+        {
+          "label": "Выйти из системы",
+          "value": "exit"
+        }
+      ],
+      "type": "radio",
+      "layout": {
+        "row": "Row_1phetcj",
+        "columns": null
+      },
+      "id": "Field_1eon8e1",
+      "key": "radio_courier_menu"
+    }
+  ],
+  "type": "default",
+  "id": "CourierMenu",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.38.1"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 19
+}

@@ -1,0 +1,38 @@
+{
+  "components": [
+    {
+      "type": "table",
+      "layout": {
+        "row": "Row_1cjmwj9",
+        "columns": null
+      },
+      "label": "Заказы",
+      "dataSource": "=orders",
+      "rowCount": 10,
+      "id": "Field_0dap98d",
+      "columns": [
+        {
+          "label": "ID заказа",
+          "key": "id"
+        },
+        {
+          "label": "Адрес доставки",
+          "key": "address"
+        },
+        {
+          "label": "Дата создания",
+          "key": "createdAt"
+        }
+      ]
+    }
+  ],
+  "type": "default",
+  "id": "CourierOrder",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.38.1"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 19
+}
