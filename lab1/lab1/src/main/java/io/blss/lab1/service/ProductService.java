@@ -3,7 +3,6 @@ package io.blss.lab1.service;
 import io.blss.lab1.dto.ProductResponse;
 import io.blss.lab1.entity.CartItem;
 import io.blss.lab1.entity.Characteristic;
-import io.blss.lab1.entity.User;
 import io.blss.lab1.exception.ProductCategoryNotFoundException;
 import io.blss.lab1.exception.ProductNotFoundException;
 import io.blss.lab1.exception.ProductQuantityException;

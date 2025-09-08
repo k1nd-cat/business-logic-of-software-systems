@@ -14,9 +14,9 @@ public class JcaConfig {
     @Bean
     public RobokassaClient robokassaClient() {
         return new RobokassaClientBuilder()
-                .merchantLogin("login")
-                .merchantPassword("password1")
-                .checkPassword("password2")
+                .merchantLogin("blsslabs")
+                .merchantPassword("HXtByPN6oK7Q5MK5oM4D")
+                .checkPassword("t9vj5MacfQQSI8P65DSE")
                 .build();
     }
 
